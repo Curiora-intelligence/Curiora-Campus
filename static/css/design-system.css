@@ -1,0 +1,92 @@
+/* ==========================================================
+   CURIORA DESIGN SYSTEM v1.0
+   Curiosity Creates Intelligence.
+========================================================== */
+
+/* ---------- IMPORT FONT ---------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+
+/* ---------- ROOT ---------- */
+
+:root{
+
+    /* COLORS */
+
+    --background:#F5F7FA;
+
+    --surface:rgba(255,255,255,.58);
+
+    --surface-hover:rgba(255,255,255,.75);
+
+    --text:#111827;
+
+    --text-secondary:#6B7280;
+
+    --accent:#5B8CFF;
+
+    --success:#22C55E;
+
+    --danger:#EF4444;
+
+    --warning:#F59E0B;
+
+    --border:rgba(255,255,255,.30);
+
+
+    /* RADIUS */
+
+    --radius-sm:12px;
+
+    --radius-md:18px;
+
+    --radius-lg:28px;
+
+    --radius-xl:36px;
+
+
+    /* SHADOWS */
+
+    --shadow-soft:
+        0 8px 30px rgba(0,0,0,.06);
+
+    --shadow-hover:
+        0 20px 60px rgba(0,0,0,.12);
+
+
+    /* BLUR */
+
+    --blur:24px;
+
+
+    /* SPACING */
+
+    --space-xs:8px;
+
+    --space-sm:16px;
+
+    --space-md:24px;
+
+    --space-lg:40px;
+
+    --space-xl:72px;
+
+
+    /* TYPOGRAPHY */
+
+    --hero:72px;
+
+    --h1:52px;
+
+    --h2:40px;
+
+    --h3:28px;
+
+    --body:18px;
+
+    --small:15px;
+
+}
+
+

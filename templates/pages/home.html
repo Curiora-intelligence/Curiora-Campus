@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Curiora Campus
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet"
+      href="{{ url_for('static', path='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="badge glass">
+            Curiora Campus
+        </span>
+
+        <h1>
+            Curiosity Creates Intelligence.
+        </h1>
+
+        <p>
+            AI-powered campus operations built for modern universities.
+            Report issues, automate workflows, and create better campus experiences.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="/student-login" class="btn btn-primary">
+                Student Login
+            </a>
+
+            <a href="/faculty-login" class="btn glass">
+                Faculty Login
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

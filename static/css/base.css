@@ -1,0 +1,15 @@
+body{
+
+min-height:100vh;
+
+}
+
+main{
+
+width:min(1400px,92%);
+
+margin:auto;
+
+padding-top:120px;
+
+}
