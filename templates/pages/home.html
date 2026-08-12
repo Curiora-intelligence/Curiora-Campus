@@ -1,47 +1,70 @@
 {% extends "layouts/base.html" %}
 
-{% block title %}
-Curiora Campus
-{% endblock %}
+{% block title %}Curiora Campus{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet"
-      href="{{ url_for('static', path='css/home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='css/home.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', path='css/visual-intelligence.css') }}?v=3">
 {% endblock %}
 
+{% block body_class %}home-page{% endblock %}
+
 {% block content %}
-
-<section class="hero">
-
-    <div class="hero-content">
-
-        <span class="badge glass">
-            Curiora Campus
-        </span>
-
-        <h1>
-            Curiosity Creates Intelligence.
-        </h1>
-
-        <p>
-            AI-powered campus operations built for modern universities.
-            Report issues, automate workflows, and create better campus experiences.
-        </p>
-
-        <div class="hero-buttons">
-
-            <a href="/student-login" class="btn btn-primary">
-                Student Login
-            </a>
-
-            <a href="/faculty-login" class="btn glass">
-                Faculty Login
-            </a>
-
+<section class="campus-hero" id="campus">
+    <div class="campus-hero-content">
+        <p class="hero-eyebrow">CURIORA CAMPUS</p>
+        <h1 class="hero-title">Campus that<br>understands.</h1>
+        <p class="hero-description">One thoughtful place to report what matters, understand what you see, and make every day on campus easier.</p>
+        <div class="hero-actions">
+            <a href="#visual-intelligence" class="button button-primary">Explore Curio</a>
+            <a href="/raise-complaint" class="button button-secondary">Report an issue</a>
         </div>
-
     </div>
 
+    <div class="campus-hero-visual" aria-hidden="true">
+        <div class="hero-visual-glass"><span>CURIO</span><small>VISUAL INTELLIGENCE</small></div>
+        <div class="hero-visual-line hero-visual-line-a"></div>
+        <div class="hero-visual-line hero-visual-line-b"></div>
+    </div>
 </section>
 
+<section class="curio-section" id="visual-intelligence">
+    <div class="curio-section-heading">
+        <p class="eyebrow">VISUAL INTELLIGENCE</p>
+        <h2>See more. Ask better.</h2>
+        <p>Upload an image or use your camera, then let Curio help you understand what is in front of you.</p>
+    </div>
+
+    {% include "components/curio_composer.html" %}
+</section>
+
+<section class="campus-products" id="services">
+    <div class="section-heading">
+        <p class="eyebrow">CAMPUS SERVICES</p>
+        <h2>Clear paths for<br>everyday problems.</h2>
+    </div>
+
+    <div class="product-list">
+        <a href="/raise-complaint" class="product-row">
+            <div><span class="product-label">Campus support</span><h3>Raise an issue, track the next step, and help campus teams respond clearly.</h3></div>
+            <span class="product-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a href="/feedback" class="product-row">
+            <div><span class="product-label">Student feedback</span><h3>Share the insight that can make the university experience better for everyone.</h3></div>
+            <span class="product-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a href="/faculty-login" class="product-row">
+            <div><span class="product-label">Faculty portal</span><h3>See the signals, resolve active reports, and keep the campus moving.</h3></div>
+            <span class="product-arrow" aria-hidden="true">↗</span>
+        </a>
+    </div>
+</section>
+
+<section class="statement-section" id="about">
+    <p>We do not build intelligence for the sake of technology. We build it to understand, create, and solve.</p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/visual-intelligence.js') }}?v=3" defer></script>
 {% endblock %}

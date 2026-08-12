@@ -1,15 +1,18 @@
-body{
-
-min-height:100vh;
-
+.site-main {
+    min-height: calc(100vh - 280px);
 }
 
-main{
+:focus-visible {
+    outline: 3px solid rgba(var(--accent-rgb), .28);
+    outline-offset: 3px;
+}
 
-width:min(1400px,92%);
-
-margin:auto;
-
-padding-top:120px;
-
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
 }

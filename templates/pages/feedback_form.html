@@ -1,31 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Campus Feedback</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fc; padding: 40px; }
-        .feed-container { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 12px; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        .btn-feed { background: #36b9cc; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div class="feed-container">
-        <h2>General Feedback</h2>
-        <form action="/submit-feedback" method="post">
-            <input type="text" name="name" placeholder="Name (Optional - Leave blank for Anonymous)" style="padding:10px; width:250px;">
-            <label>Rate your experience (1-5)</label>
-            <select name="rating">
-                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
-                <option value="4">⭐⭐⭐⭐ Good</option>
-                <option value="3">⭐⭐⭐ Average</option>
-                <option value="2">⭐⭐ Poor</option>
-                <option value="1">⭐ Very Bad</option>
-            </select>
-            <textarea name="comment" rows="4" placeholder="How can we improve the college?"></textarea>
-            <button type="submit" class="btn-feed">Submit Feedback</button>
-        </form>
+{% extends "layouts/base.html" %}
+
+{% block title %}Feedback — Curiora Campus{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="form-page-heading">
+        <p class="eyebrow">STUDENT FEEDBACK</p>
+        <h1>Help us make campus better.</h1>
+        <p>Your feedback gives campus teams a clearer signal about what should improve next.</p>
     </div>
-</body>
-</html>
+
+    <form class="campus-form" action="/submit-feedback" method="post">
+        <label class="field-label" for="name">Name <span>Optional</span></label>
+        <input id="name" type="text" name="name" maxlength="100" placeholder="How should we address you?">
+
+        <label class="field-label" for="rating">Your experience</label>
+        <select id="rating" name="rating" required>
+            <option value="5">5 — Excellent</option>
+            <option value="4">4 — Good</option>
+            <option value="3">3 — Okay</option>
+            <option value="2">2 — Needs improvement</option>
+            <option value="1">1 — Poor</option>
+        </select>
+
+        <label class="field-label" for="comment">Your feedback</label>
+        <textarea id="comment" name="comment" rows="6" maxlength="2000" placeholder="Tell us what worked well or what should change." required></textarea>
+
+        <button type="submit" class="button button-primary">Submit feedback</button>
+    </form>
+</section>
+{% endblock %}

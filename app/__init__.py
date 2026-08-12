@@ -1,0 +1,1 @@
+"""Curiora Campus application package."""

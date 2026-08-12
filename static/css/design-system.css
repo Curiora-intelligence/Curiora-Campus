@@ -1,92 +1,94 @@
-/* ==========================================================
-   CURIORA DESIGN SYSTEM v1.0
-   Curiosity Creates Intelligence.
-========================================================== */
+/* Curiora Website visual language */
 
-/* ---------- IMPORT FONT ---------- */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-
-/* ---------- ROOT ---------- */
-
-:root{
-
-    /* COLORS */
-
-    --background:#F5F7FA;
-
-    --surface:rgba(255,255,255,.58);
-
-    --surface-hover:rgba(255,255,255,.75);
-
-    --text:#111827;
-
-    --text-secondary:#6B7280;
-
-    --accent:#5B8CFF;
-
-    --success:#22C55E;
-
-    --danger:#EF4444;
-
-    --warning:#F59E0B;
-
-    --border:rgba(255,255,255,.30);
-
-
-    /* RADIUS */
-
-    --radius-sm:12px;
-
-    --radius-md:18px;
-
-    --radius-lg:28px;
-
-    --radius-xl:36px;
-
-
-    /* SHADOWS */
-
-    --shadow-soft:
-        0 8px 30px rgba(0,0,0,.06);
-
-    --shadow-hover:
-        0 20px 60px rgba(0,0,0,.12);
-
-
-    /* BLUR */
-
-    --blur:24px;
-
-
-    /* SPACING */
-
-    --space-xs:8px;
-
-    --space-sm:16px;
-
-    --space-md:24px;
-
-    --space-lg:40px;
-
-    --space-xl:72px;
-
-
-    /* TYPOGRAPHY */
-
-    --hero:72px;
-
-    --h1:52px;
-
-    --h2:40px;
-
-    --h3:28px;
-
-    --body:18px;
-
-    --small:15px;
-
+:root {
+    --background: #ffffff;
+    --surface: #f5f5f7;
+    --surface-strong: #ececf0;
+    --text: #111318;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #929297;
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-rgb: 0, 113, 227;
+    --border: rgba(0, 0, 0, .08);
+    --border-strong: rgba(0, 0, 0, .13);
+    --glass-bg: rgba(255, 255, 255, .68);
+    --glass-border: rgba(255, 255, 255, .78);
+    --glass-highlight: rgba(255, 255, 255, .6);
+    --max-width: 1200px;
+    --radius-small: 14px;
+    --radius-medium: 20px;
+    --radius-large: 32px;
+    --radius-xl: 42px;
+    --radius-pill: 999px;
+    --shadow-soft: 0 8px 30px rgba(0, 0, 0, .06);
+    --shadow-medium: 0 18px 50px rgba(0, 40, 90, .08);
+    --shadow-blue: 0 20px 60px rgba(0, 90, 220, .12);
+    --transition: 320ms cubic-bezier(.22, .61, .36, 1);
+    --transition-fast: 180ms cubic-bezier(.2, .8, .2, 1);
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    overflow-x: hidden;
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    border: 0;
+}
+
+::selection {
+    background: var(--text);
+    color: #fff;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

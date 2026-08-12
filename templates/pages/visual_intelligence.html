@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Visual Intelligence — Curiora Campus{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/visual-intelligence.css') }}?v=3">
+{% endblock %}
+
+{% block body_class %}visual-page{% endblock %}
+
+{% block content %}
+<section class="visual-page-hero">
+    <div class="visual-page-heading">
+        <p class="eyebrow">CURIORA RESEARCH × CAMPUS</p>
+        <h1>Visual intelligence<br>for the real world.</h1>
+        <p>Capture an image, add context in your own words, and ask Curio to help you understand it.</p>
+    </div>
+
+    {% include "components/curio_composer.html" %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/visual-intelligence.js') }}?v=3" defer></script>
+{% endblock %}

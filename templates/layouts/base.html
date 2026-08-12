@@ -1,51 +1,28 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Curiora Campus — thoughtful intelligence for modern universities.">
+    <title>{% block title %}Curiora Campus{% endblock %}</title>
 
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0">
-
-<title>
-{% block title %}
-Curiora
-{% endblock %}
-</title>
-
-<link rel="stylesheet"
-href="{{ url_for('static',
-path='css/design-system.css') }}">
-
-<link rel="stylesheet"
-href="{{ url_for('static',
-path='css/base.css') }}">
-
-<link rel="stylesheet"
-href="{{ url_for('static',
-path='css/components.css') }}">
-
-{% block styles %}
-{% endblock %}
-
+    <link rel="stylesheet" href="{{ url_for('static', path='css/design-system.css') }}?v=3">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/base.css') }}?v=3">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/components.css') }}?v=3">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/campus.css') }}?v=3">
+    {% block styles %}{% endblock %}
 </head>
+<body class="{% block body_class %}{% endblock %}">
+    {% include "components/navbar.html" %}
 
-<body>
+    <main class="site-main">
+        {% block content %}{% endblock %}
+    </main>
 
-{% include "components/navbar.html" %}
+    {% include "components/footer.html" %}
 
-<main>
-
-{% block content %}
-{% endblock %}
-
-</main>
-
-{% block scripts %}
-{% endblock %}
-
+    <script src="{{ url_for('static', path='js/app.js') }}?v=3" defer></script>
+    {% block scripts %}{% endblock %}
 </body>
-
 </html>

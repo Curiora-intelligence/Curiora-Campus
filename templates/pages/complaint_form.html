@@ -1,30 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Raise Complaint</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fc; padding: 40px; }
-        .form-container { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
-        button { width: 100%; padding: 12px; background: #4e73df; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <h2>Submit Grievance</h2>
-        <form action="/submit-complaint" method="post">
-            <label>Issue Category</label>
-            <select name="category">
-                <option value="Academic">Academic</option>
-                <option value="Hostel">Hostel</option>
-                <option value="Mess">Mess</option>
-                <option value="Infrastructure">Infrastructure</option>
-            </select>
-            <label>Description</label>
-            <textarea name="description" rows="4" placeholder="Detail the issue here..." required></textarea>
-            <button type="submit">Analyze with AI Engine</button>
-        </form>
+{% extends "layouts/base.html" %}
+
+{% block title %}Report an Issue — Curiora Campus{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="form-page-heading">
+        <p class="eyebrow">CAMPUS SUPPORT</p>
+        <h1>Tell us what needs attention.</h1>
+        <p>Give the campus team enough context to begin triage quickly.</p>
     </div>
-</body>
-</html>
+
+    <form class="campus-form" action="/submit-complaint" method="post">
+        <label class="field-label" for="category">Issue category</label>
+        <select id="category" name="category" required>
+            {% for category in categories %}<option value="{{ category }}">{{ category }}</option>{% endfor %}
+        </select>
+
+        <label class="field-label" for="description">What happened?</label>
+        <textarea id="description" name="description" rows="6" maxlength="2000" placeholder="Include the location, time, and details that will help the team respond." required></textarea>
+
+        <button type="submit" class="button button-primary">Send report</button>
+    </form>
+</section>
+{% endblock %}
