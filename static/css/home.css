@@ -1,4 +1,4 @@
-/* Landing page adapted to the Curiora Website visual system. */
+/* Landing page adapted to the Curiora Website visual system - Liquid Glass. */
 
 .campus-hero {
     position: relative;
@@ -18,10 +18,11 @@
     width: min(800px, 100vw);
     height: 520px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(170, 211, 255, .32), rgba(255, 255, 255, 0) 70%);
+    background: radial-gradient(circle, rgba(170, 211, 255, 0.4), rgba(255, 255, 255, 0) 70%);
     content: "";
     transform: translateX(50%);
     pointer-events: none;
+    animation: liquid-pulse 8s var(--ease-standard) infinite alternate;
 }
 
 .campus-hero-content {
@@ -30,16 +31,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: hero-reveal 900ms cubic-bezier(.22, .61, .36, 1) both;
+    animation: fade-in-up 900ms var(--ease-standard) both;
 }
 
-.hero-eyebrow,
-.eyebrow {
+.hero-eyebrow, .eyebrow {
     margin: 0;
     color: var(--text-secondary);
     font-size: 13px;
     font-weight: 650;
-    letter-spacing: .15em;
+    letter-spacing: 0.15em;
 }
 
 .hero-title {
@@ -48,8 +48,8 @@
     color: var(--text);
     font-size: clamp(58px, 8.7vw, 124px);
     font-weight: 700;
-    line-height: .91;
-    letter-spacing: -.066em;
+    line-height: 0.91;
+    letter-spacing: -0.066em;
 }
 
 .hero-description {
@@ -85,17 +85,23 @@
     justify-content: center;
     width: 190px;
     height: 92px;
-    border: 1px solid rgba(120, 170, 255, .25);
-    border-radius: 28px;
-    background: radial-gradient(circle at 50% 35%, #fff, rgba(226, 240, 255, .84));
-    box-shadow: var(--shadow-blue), inset 0 1px 0 #fff;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-large);
+    background: var(--glass-bg);
+    box-shadow: var(--shadow-blue), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    backdrop-filter: var(--glass-filter);
+    -webkit-backdrop-filter: var(--glass-filter);
     transform: translateX(-50%);
+    animation: liquid-float 6s ease-in-out infinite;
 }
 
 .hero-visual-glass span {
     font-size: 13px;
     font-weight: 700;
-    letter-spacing: .19em;
+    letter-spacing: 0.19em;
+    background: linear-gradient(135deg, var(--text), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .hero-visual-glass small {
@@ -103,14 +109,14 @@
     color: var(--text-secondary);
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: .12em;
+    letter-spacing: 0.12em;
 }
 
 .hero-visual-line {
     position: absolute;
     top: 42px;
     left: 50%;
-    border: 1px solid rgba(var(--accent-rgb), .2);
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
     border-radius: 50%;
     transform: translateX(-50%);
     animation: hero-orbit 12s ease-in-out infinite;
@@ -131,13 +137,12 @@
     text-align: center;
 }
 
-.curio-section-heading h2,
-.section-heading h2 {
+.curio-section-heading h2, .section-heading h2 {
     margin: 18px 0 0;
     font-size: clamp(44px, 6vw, 76px);
     font-weight: 650;
-    line-height: .98;
-    letter-spacing: -.055em;
+    line-height: 0.98;
+    letter-spacing: -0.055em;
 }
 
 .curio-section-heading > p:last-child {
@@ -155,7 +160,7 @@
 
 .section-heading { margin-bottom: 72px; }
 
-.product-list { border-top: 1px solid var(--border); }
+.product-list { border-top: 1px solid rgba(0,0,0,0.08); }
 
 .product-row {
     position: relative;
@@ -164,8 +169,8 @@
     justify-content: space-between;
     gap: 50px;
     padding: 56px 0;
-    border-bottom: 1px solid var(--border);
-    transition: padding var(--transition);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    transition: padding var(--duration-normal) var(--ease-standard), background var(--duration-normal) var(--ease-standard);
 }
 
 .product-row::after {
@@ -178,10 +183,15 @@
     content: "";
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 500ms cubic-bezier(.22, .61, .36, 1);
+    transition: transform var(--duration-slow) var(--ease-standard);
 }
 
-.product-row:hover { padding-right: 18px; padding-left: 18px; }
+.product-row:hover { 
+    padding-right: 18px; 
+    padding-left: 18px; 
+    background: rgba(255,255,255,0.4);
+    border-radius: var(--radius-medium);
+}
 .product-row:hover::after { transform: scaleX(1); }
 
 .product-label {
@@ -198,7 +208,7 @@
     font-size: clamp(27px, 3.3vw, 48px);
     font-weight: 600;
     line-height: 1.08;
-    letter-spacing: -.045em;
+    letter-spacing: -0.045em;
 }
 
 .product-arrow {
@@ -209,10 +219,15 @@
     place-items: center;
     border-radius: 50%;
     font-size: 24px;
-    transition: transform var(--transition), background var(--transition), color var(--transition);
+    transition: transform var(--duration-normal) var(--ease-standard), background var(--duration-normal) var(--ease-standard), color var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal);
 }
 
-.product-row:hover .product-arrow { background: var(--accent); color: #fff; transform: translate(4px, -4px); }
+.product-row:hover .product-arrow { 
+    background: var(--accent); 
+    color: #ffffff; 
+    transform: translate(6px, -6px); 
+    box-shadow: var(--shadow-blue);
+}
 
 .statement-section {
     display: grid;
@@ -229,12 +244,7 @@
     font-size: clamp(36px, 5vw, 68px);
     font-weight: 600;
     line-height: 1.05;
-    letter-spacing: -.05em;
-}
-
-@keyframes hero-reveal {
-    from { opacity: 0; transform: translateY(18px); }
-    to { opacity: 1; transform: translateY(0); }
+    letter-spacing: -0.05em;
 }
 
 @keyframes hero-orbit {
@@ -248,7 +258,7 @@
     .hero-description { font-size: 17px; }
     .hero-actions { flex-direction: column; width: min(300px, 100%); }
     .hero-actions .button { width: 100%; }
-    .campus-hero-visual { margin-top: 50px; transform: scale(.85); transform-origin: top center; }
+    .campus-hero-visual { margin-top: 50px; transform: scale(0.85); transform-origin: top center; }
     .curio-section { padding: 96px 20px 110px; }
     .curio-section-heading { margin-bottom: 34px; }
     .curio-section-heading > p:last-child { font-size: 16px; }

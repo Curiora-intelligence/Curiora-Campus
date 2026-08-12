@@ -1,39 +1,51 @@
-/* Curiora Website visual language */
+/* Curiora Website visual language - Liquid Glass Theme */
 
 :root {
+    /* Colors */
     --background: #ffffff;
     --surface: #f5f5f7;
-    --surface-strong: #ececf0;
     --text: #111318;
     --text-secondary: #6e6e73;
     --text-tertiary: #929297;
-    --accent: #0071e3;
+    --accent: #0071E3;
     --accent-hover: #0077ed;
     --accent-rgb: 0, 113, 227;
-    --border: rgba(0, 0, 0, .08);
-    --border-strong: rgba(0, 0, 0, .13);
-    --glass-bg: rgba(255, 255, 255, .68);
-    --glass-border: rgba(255, 255, 255, .78);
-    --glass-highlight: rgba(255, 255, 255, .6);
-    --max-width: 1200px;
+
+    /* Liquid Glass */
+    --glass-bg: rgba(255, 255, 255, 0.68);
+    --glass-border: rgba(255, 255, 255, 0.78);
+    --glass-highlight: rgba(255, 255, 255, 0.6);
+    --glass-filter: blur(28px) saturate(180%);
+
+    /* Shadows */
+    --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 18px 50px rgba(0, 28, 90, 0.08);
+    --shadow-blue: 0 20px 60px rgba(0, 90, 220, 0.12);
+
+    /* Radii */
     --radius-small: 14px;
     --radius-medium: 20px;
     --radius-large: 32px;
     --radius-xl: 42px;
     --radius-pill: 999px;
-    --shadow-soft: 0 8px 30px rgba(0, 0, 0, .06);
-    --shadow-medium: 0 18px 50px rgba(0, 40, 90, .08);
-    --shadow-blue: 0 20px 60px rgba(0, 90, 220, .12);
-    --transition: 320ms cubic-bezier(.22, .61, .36, 1);
-    --transition-fast: 180ms cubic-bezier(.2, .8, .2, 1);
+
+    /* Easing */
+    --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    /* Durations */
+    --duration-fast: 180ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+    --transition: 320ms var(--ease-standard);
+    --transition-fast: var(--duration-fast) var(--ease-smooth);
+
+    /* Typography */
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    --max-width: 1200px;
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
     scroll-behavior: smooth;
@@ -56,15 +68,11 @@ a {
     text-decoration: none;
 }
 
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
     font: inherit;
 }
 
-button,
-a {
+button, a {
     -webkit-tap-highlight-color: transparent;
 }
 

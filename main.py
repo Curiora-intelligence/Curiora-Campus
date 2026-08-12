@@ -25,7 +25,6 @@ from app.routers.curio import curio_router
 
 ROOT_DIR = Path(__file__).resolve().parent
 STATIC_DIR = ROOT_DIR / "static"
-TEMPLATES_DIR = ROOT_DIR / "templates"
 DATA_DIR = ROOT_DIR / "data"
 COMPLAINTS_FILE = DATA_DIR / "complaints.csv"
 FEEDBACK_FILE = DATA_DIR / "feedback.csv"
@@ -42,7 +41,7 @@ TRIAGE_ESTIMATES = {
 app = FastAPI(title="saiganesh",version="1.0.0",docs_url=None,redoc_url=None,openapi_url=None)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+templates = Jinja2Templates(directory="templates")
 app.include_router(curio_router)
 
 

@@ -1,18 +1,31 @@
+@import url('./animations.css');
+
 .site-main {
     min-height: calc(100vh - 280px);
 }
 
 :focus-visible {
-    outline: 3px solid rgba(var(--accent-rgb), .28);
+    outline: 3px solid rgba(var(--accent-rgb), 0.28);
     outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Base utility classes for liquid glass */
+.glass-surface {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-filter);
+    -webkit-backdrop-filter: var(--glass-filter);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after {
-        animation-duration: .01ms !important;
+        animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
+        transition-duration: 0.01ms !important;
     }
 }
