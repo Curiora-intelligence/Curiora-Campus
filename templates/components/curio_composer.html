@@ -2,9 +2,6 @@
     <div class="curio-card">
         <header class="curio-card-header">
             <div class="curio-identity">
-                <span class="curio-mark" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 12c2.1-3.5 4.8-5.25 8-5.25S17.9 8.5 20 12c-2.1 3.5-4.8 5.25-8 5.25S6.1 15.5 4 12Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.4" stroke="currentColor" stroke-width="1.8"/></svg>
-                </span>
                 <div>
                     <p>CURIO</p>
                     <span>Visual intelligence</span>
@@ -23,17 +20,37 @@
             </article>
         </section>
 
-        <div class="curio-image-preview" data-curio-preview-shell hidden>
-            <img data-curio-preview alt="Selected image for Curio to analyze">
-            <div class="curio-image-preview-meta">
-                <span data-curio-filename>Image ready</span>
-                <button type="button" data-curio-remove-image aria-label="Remove selected image">
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                </button>
-            </div>
-        </div>
-
         <form class="curio-composer" data-curio-form>
+            <div class="curio-image-preview is-hidden" data-curio-preview-shell>
+                <img data-curio-preview alt="Selected image for Curio to analyze">
+                <div class="curio-image-preview-meta">
+                    <span data-curio-filename>Image ready</span>
+                    <button type="button" data-curio-remove-image aria-label="Remove selected image">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="curio-camera-inline is-hidden" data-curio-camera>
+                <div class="curio-camera-toolbar">
+                    <div>
+                        <p id="curio-camera-title">Take a photo</p>
+                        <span data-curio-camera-status>Requesting camera access…</span>
+                    </div>
+                    <button type="button" data-curio-close-camera aria-label="Close camera">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    </button>
+                </div>
+                <div class="curio-camera-view">
+                    <video data-curio-video autoplay playsinline muted></video>
+                </div>
+                <div class="curio-camera-actions">
+                    <button type="button" class="button button-secondary" data-curio-close-camera>Cancel</button>
+                    <button type="button" class="button button-primary" data-curio-capture>Capture photo</button>
+                </div>
+            </div>
+
+
             <input data-curio-file-input type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
 
             <div class="curio-attachment-menu" data-curio-menu hidden>
@@ -72,26 +89,5 @@
         <span>Image-aware</span>
         <span>Private local inference</span>
         <span>Voice optional</span>
-    </div>
-
-    <div class="curio-camera-modal" data-curio-camera hidden>
-        <div class="curio-camera-dialog" role="dialog" aria-modal="true" aria-labelledby="curio-camera-title">
-            <div class="curio-camera-toolbar">
-                <div>
-                    <p id="curio-camera-title">Take a photo</p>
-                    <span data-curio-camera-status>Requesting camera access…</span>
-                </div>
-                <button type="button" data-curio-close-camera aria-label="Close camera">
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                </button>
-            </div>
-            <div class="curio-camera-view">
-                <video data-curio-video autoplay playsinline muted></video>
-            </div>
-            <div class="curio-camera-actions">
-                <button type="button" class="button button-secondary" data-curio-close-camera>Cancel</button>
-                <button type="button" class="button button-primary" data-curio-capture>Capture photo</button>
-            </div>
-        </div>
     </div>
 </div>

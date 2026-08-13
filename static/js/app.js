@@ -33,10 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const signature = document.getElementById("curioraSignature");
     if (signature) {
         const glass = signature.querySelector(".signature-glass");
-        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        if (glass && !prefersReducedMotion) {
-            signature.addEventListener("pointermove", (event) => {
+        if (glass) {
+            console.log("Curiora signature 3D effect initialized.");
+            signature.addEventListener("mousemove", (event) => {
                 const rect = signature.getBoundingClientRect();
                 const x = event.clientX - rect.left;
                 const y = event.clientY - rect.top;
@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
 
-                const rotateY = ((x - centerX) / centerX) * 8;
-                const rotateX = ((centerY - y) / centerY) * 6;
+                const rotateY = ((x - centerX) / centerX) * 12;
+                const rotateX = ((centerY - y) / centerY) * 10;
 
                 glass.style.setProperty("--mouse-x", `${percentX}%`);
                 glass.style.setProperty("--mouse-y", `${percentY}%`);
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 glass.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
             });
 
-            signature.addEventListener("pointerleave", () => {
+            signature.addEventListener("mouseleave", () => {
                 glass.style.setProperty("--mouse-x", "50%");
                 glass.style.setProperty("--mouse-y", "50%");
                 glass.style.transform = "perspective(700px) rotateX(0deg) rotateY(0deg) translateZ(0)";

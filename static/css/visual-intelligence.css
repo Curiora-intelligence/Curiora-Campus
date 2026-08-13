@@ -154,10 +154,21 @@
 
 .curio-message--user {
     align-self: flex-end;
+    display: flex;
+    flex-direction: column;
     padding: 11px 14px;
     border-radius: 18px 18px 5px 18px;
     background: var(--accent);
     color: #fff;
+}
+
+.curio-message--user img {
+    max-width: 240px;
+    max-height: 240px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .curio-message--error { color: #9d3023; }
@@ -198,14 +209,29 @@
 .curio-thinking i:nth-child(3) { animation-delay: .24s; }
 
 .curio-image-preview {
-    position: relative;
-    width: fit-content;
+    position: absolute;
+    bottom: calc(100% - 8px);
+    left: 0;
+    z-index: 10;
+    width: 100%;
     max-width: min(360px, calc(100% - 20px));
-    margin: 14px 10px 0;
+    margin: 0;
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 16px;
     background: #fff;
+    transform-origin: bottom left;
+    transition: transform 400ms cubic-bezier(.2,.8,.2,1), opacity 400ms ease, visibility 400ms;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+}
+
+.curio-image-preview.is-hidden {
+    opacity: 0;
+    transform: scale(0.25) translateY(40px) translateX(-40px);
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .curio-image-preview img {
@@ -252,6 +278,8 @@
 .curio-composer {
     position: relative;
     padding-top: 12px;
+    display: flex;
+    flex-direction: column;
 }
 
 .curio-composer-row {
@@ -387,25 +415,30 @@
     content: "•";
 }
 
-.curio-camera-modal {
-    position: fixed;
-    z-index: 300;
-    inset: 0;
-    display: grid;
-    padding: 24px;
-    place-items: center;
-    background: rgba(12, 18, 30, .42);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+.curio-camera-inline {
+    position: absolute;
+    bottom: calc(100% - 8px);
+    left: 0;
+    right: 0;
+    z-index: 10;
+    width: 100%;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: #fff;
+    transform-origin: bottom left;
+    transition: transform 400ms cubic-bezier(.2,.8,.2,1), opacity 400ms ease, visibility 400ms;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
 }
 
-.curio-camera-dialog {
-    width: min(680px, 100%);
-    padding: 16px;
-    border: 1px solid rgba(255, 255, 255, .75);
-    border-radius: 28px;
-    background: #fff;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, .25);
+.curio-camera-inline.is-hidden {
+    opacity: 0;
+    transform: scale(0.25) translateY(40px) translateX(-40px);
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .curio-camera-toolbar { justify-content: space-between; gap: 18px; padding: 2px 2px 14px; }
@@ -419,7 +452,7 @@
     background: #0b0e13;
 }
 
-.curio-camera-view video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.curio-camera-view video { display: block; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 .curio-camera-actions { justify-content: flex-end; gap: 10px; padding-top: 14px; }
 .curio-camera-actions .button { min-height: 42px; min-width: 0; padding: 10px 17px; font-size: 14px; }
 
@@ -450,7 +483,7 @@
     .curio-composer textarea { font-size: 13px; }
     .curio-guardrails { gap: 6px 10px; font-size: 11px; }
     .curio-guardrails span + span::before { margin-right: 10px; }
-    .curio-camera-modal { padding: 12px; }
-    .curio-camera-dialog { padding: 12px; border-radius: 22px; }
+    .curio-camera-inline { padding: 12px; border-radius: 22px; }
+    .curio-camera-inline.is-hidden { padding: 0 12px; }
     .curio-camera-actions .button { flex: 1; }
 }

@@ -3,8 +3,8 @@
 {% block title %}Curiora Campus{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/home.css') }}?v=3">
-<link rel="stylesheet" href="{{ url_for('static', path='css/visual-intelligence.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', path='css/home.css') }}?v=4">
+<link rel="stylesheet" href="{{ url_for('static', path='css/visual-intelligence.css') }}?v=4">
 {% endblock %}
 
 {% block body_class %}home-page{% endblock %}
@@ -21,10 +21,12 @@
         </div>
     </div>
 
-    <div class="campus-hero-visual" aria-hidden="true">
-        <div class="hero-visual-glass"><span>CURIO</span><small>VISUAL INTELLIGENCE</small></div>
-        <div class="hero-visual-line hero-visual-line-a"></div>
-        <div class="hero-visual-line hero-visual-line-b"></div>
+    <div class="curiora-signature" id="curioraSignature">
+        <div class="signature-orbit orbit-a"></div>
+        <div class="signature-orbit orbit-b"></div>
+        <div class="signature-glass">
+            <span class="signature-word">CURIO</span>
+        </div>
     </div>
 </section>
 
@@ -38,33 +40,8 @@
     {% include "components/curio_composer.html" %}
 </section>
 
-<section class="campus-products animate-fade-in" id="services">
-    <div class="section-heading">
-        <p class="eyebrow">CAMPUS SERVICES</p>
-        <h2>Clear paths for<br>everyday problems.</h2>
-    </div>
-
-    <div class="product-list">
-        <a href="/raise-complaint" class="product-row">
-            <div><span class="product-label">Campus support</span><h3>Raise an issue, track the next step, and help campus teams respond clearly.</h3></div>
-            <span class="product-arrow" aria-hidden="true">↗</span>
-        </a>
-        <a href="/feedback" class="product-row">
-            <div><span class="product-label">Student feedback</span><h3>Share the insight that can make the university experience better for everyone.</h3></div>
-            <span class="product-arrow" aria-hidden="true">↗</span>
-        </a>
-        <a href="/faculty-login" class="product-row">
-            <div><span class="product-label">Faculty portal</span><h3>See the signals, resolve active reports, and keep the campus moving.</h3></div>
-            <span class="product-arrow" aria-hidden="true">↗</span>
-        </a>
-    </div>
-</section>
-
-<section class="statement-section animate-fade-in" id="about">
-    <p>We do not build intelligence for the sake of technology. We build it to understand, create, and solve.</p>
-</section>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', path='js/visual-intelligence.js') }}?v=3" defer></script>
+<script src="{{ url_for('static', path='js/visual-intelligence.js') }}?v=4" defer></script>
 {% endblock %}

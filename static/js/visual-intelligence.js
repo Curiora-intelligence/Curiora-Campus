@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const cameraButton = app.querySelector('[data-curio-open-camera]');
     const imageButton = app.querySelector('[data-curio-upload]');
-    const videoPauseButton = app.querySelector('[data-curio-video-pause]'); // Assume it exists or is added
-    const microphonePauseButton = app.querySelector('[data-curio-mic-pause]'); // Assume it exists or is added
-    const cancelCameraButton = app.querySelector('[data-curio-close-camera]');
+    const videoPauseButton = app.querySelector('[data-curio-pause-video]');
+    const microphonePauseButton = app.querySelector('[data-curio-mute-audio]');
+    const cancelCameraButtons = app.querySelectorAll('[data-curio-close-camera]');
     const cameraContainer = app.querySelector('[data-curio-camera]');
     const cameraPreview = app.querySelector('[data-curio-video]');
     const imageContainer = app.querySelector('[data-curio-preview-shell]');
@@ -99,13 +99,23 @@ document.addEventListener("DOMContentLoaded", () => {
         videoPaused = false;
         microphonePaused = false;
 
-        if (cameraContainer) cameraContainer.hidden = true;
-        if (imageContainer) imageContainer.hidden = true;
+        if (cameraContainer) {
+            cameraContainer.classList.add('is-hidden');
+            setTimeout(() => {
+                if (!cameraActive) cameraContainer.hidden = true;
+            }, 400); // match transition
+        }
+        if (imageContainer) {
+            imageContainer.classList.add('is-hidden');
+            setTimeout(() => {
+                if (!selectedImageFile) imageContainer.hidden = true;
+            }, 400);
+        }
         if (imageConversation) imageConversation.hidden = true;
         if (imageStatus) imageStatus.textContent = "Curio is ready";
         
-        if (videoPauseButton) videoPauseButton.textContent = "Video pause";
-        if (microphonePauseButton) microphonePauseButton.textContent = "Microphone pause";
+        if (videoPauseButton) videoPauseButton.textContent = "Pause video";
+        if (microphonePauseButton) microphonePauseButton.textContent = "Mute audio";
 
         if (imageVoiceButton) {
             imageVoiceButton.classList.remove("is-listening");
@@ -116,8 +126,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function setCameraState() {
-        if (cameraContainer) cameraContainer.hidden = false;
-        if (imageContainer) imageContainer.hidden = true;
+        if (cameraContainer) {
+            cameraContainer.hidden = false;
+            // Force reflow
+            void cameraContainer.offsetWidth;
+            cameraContainer.classList.remove('is-hidden');
+        }
+        if (imageContainer) {
+            imageContainer.classList.add('is-hidden');
+            setTimeout(() => {
+                if (!selectedImageFile && cameraActive) imageContainer.hidden = true;
+            }, 400);
+        }
         if (imageConversation) imageConversation.hidden = true;
 
         if (cameraStatus) cameraStatus.textContent = "Curio is observing";
@@ -126,8 +146,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function setImageState() {
-        if (cameraContainer) cameraContainer.hidden = true;
-        if (imageContainer) imageContainer.hidden = false;
+        if (cameraContainer) {
+            cameraContainer.classList.add('is-hidden');
+            setTimeout(() => {
+                if (!cameraActive) cameraContainer.hidden = true;
+            }, 400);
+        }
+        if (imageContainer) {
+            imageContainer.hidden = false;
+            // Force reflow
+            void imageContainer.offsetWidth;
+            imageContainer.classList.remove('is-hidden');
+        }
         if (imageConversation) imageConversation.hidden = false;
 
         if (imageStatus) imageStatus.textContent = "Curio is ready to examine this image";
@@ -224,12 +254,40 @@ document.addEventListener("DOMContentLoaded", () => {
     IMAGE CONVERSATION
     ========================================================
     */
-    function addConversationMessage(role, message) {
+    function addConversationMessage(role, message, imageUrl = null) {
         if (!imageConversation) return;
 
-        const messageElement = document.createElement("div");
-        messageElement.className = `image-message ${role}`;
-        messageElement.textContent = message;
+        const messageElement = document.createElement("article");
+        
+        if (role === 'curio') {
+            messageElement.className = "curio-message curio-message--assistant";
+            
+            const avatar = document.createElement("span");
+            avatar.className = "curio-message-avatar";
+            avatar.setAttribute("aria-hidden", "true");
+            avatar.textContent = "C";
+            
+            const div = document.createElement("div");
+            const p = document.createElement("p");
+            p.textContent = message;
+            div.appendChild(p);
+            
+            messageElement.appendChild(avatar);
+            messageElement.appendChild(div);
+        } else {
+            messageElement.className = "curio-message curio-message--user";
+            
+            if (imageUrl) {
+                const img = document.createElement("img");
+                img.src = imageUrl;
+                img.alt = "Uploaded image";
+                messageElement.appendChild(img);
+            }
+            
+            const p = document.createElement("p");
+            p.textContent = message;
+            messageElement.appendChild(p);
+        }
 
         imageConversation.appendChild(messageElement);
         imageConversation.scrollTop = imageConversation.scrollHeight;
@@ -241,12 +299,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (imageStatus) imageStatus.textContent = "Analyzing image...";
         if (imageSendButton) imageSendButton.disabled = true;
 
+        const thinkingId = "curio-thinking-" + Date.now();
+        const thinkingHtml = `
+            <span class="curio-message-avatar" aria-hidden="true">C</span>
+            <div>
+                <div class="curio-thinking"><i></i><i></i><i></i></div>
+            </div>
+        `;
+        const thinkingElement = document.createElement("article");
+        thinkingElement.className = "curio-message curio-message--assistant";
+        thinkingElement.id = thinkingId;
+        thinkingElement.innerHTML = thinkingHtml;
+        
+        if (imageConversation) {
+            imageConversation.appendChild(thinkingElement);
+            imageConversation.scrollTop = imageConversation.scrollHeight;
+        }
+
         try {
             const formData = new FormData();
             formData.append("image", selectedImageFile);
             formData.append("message", message);
 
-            const response = await fetch("/api/visual-intelligence/analyze", {
+            const response = await fetch("/curio/analyze", {
                 method: "POST",
                 body: formData
             });
@@ -262,12 +337,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
             
+            const thinkingBubble = document.getElementById(thinkingId);
+            if (thinkingBubble) thinkingBubble.remove();
+            
             // Assume the API might return the answer in `answer` or similar
             const answerText = data.answer || data.result || "Analysis complete.";
             addConversationMessage("curio", answerText);
 
             if (imageStatus) imageStatus.textContent = "Curio is ready";
         } catch (error) {
+            const thinkingBubble = document.getElementById(thinkingId);
+            if (thinkingBubble) thinkingBubble.remove();
+            
             console.error("Curio image analysis failed:", error);
             if (imageStatus) imageStatus.textContent = "Analysis failed";
             addConversationMessage("curio", `I couldn't process that image. ${error.message}`);
@@ -284,7 +365,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const message = imageMessageInput.value.trim();
             if (!message) return;
 
-            addConversationMessage("user", message);
+            addConversationMessage("user", message, selectedImageObjectUrl);
+            
+            if (imageContainer) {
+                imageContainer.classList.add('is-hidden');
+                setTimeout(() => {
+                    imageContainer.hidden = true;
+                }, 400);
+            }
 
             imageMessageInput.value = "";
             imageMessageInput.style.height = "auto";
@@ -294,6 +382,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (imageMessageInput) {
+        imageMessageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                if (imageSendButton && !imageSendButton.disabled) {
+                    imageMessageForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+            }
+        });
+
         imageMessageInput.addEventListener("input", () => {
             imageMessageInput.style.height = "auto";
             imageMessageInput.style.height = `${Math.min(imageMessageInput.scrollHeight, 140)}px`;
@@ -392,6 +489,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         speechRecognition.onerror = event => {
             console.warn("Curiora voice input error:", event.error);
+            if (imageStatus) {
+                imageStatus.textContent = "Voice input failed or isn't supported.";
+                imageStatus.classList.add("is-error");
+            }
             setVoiceInactiveUI();
         };
 
@@ -448,7 +549,91 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (cameraButton) cameraButton.addEventListener("click", startCamera);
-    if (cancelCameraButton) cancelCameraButton.addEventListener("click", cancelCamera);
+    if (cancelCameraButtons) {
+        cancelCameraButtons.forEach(btn => btn.addEventListener("click", cancelCamera));
+    }
+
+    if (videoPauseButton) {
+        videoPauseButton.addEventListener("click", () => {
+            if (!cameraStream) return;
+            videoPaused = !videoPaused;
+            cameraStream.getVideoTracks().forEach(track => track.enabled = !videoPaused);
+            videoPauseButton.textContent = videoPaused ? "Resume video" : "Pause video";
+        });
+    }
+
+    if (microphonePauseButton) {
+        microphonePauseButton.addEventListener("click", () => {
+            if (!cameraStream) return;
+            microphonePaused = !microphonePaused;
+            cameraStream.getAudioTracks().forEach(track => track.enabled = !microphonePaused);
+            microphonePauseButton.textContent = microphonePaused ? "Unmute audio" : "Mute audio";
+        });
+    }
+
+    /*
+    ========================================================
+    TYPING PLACEHOLDER
+    ========================================================
+    */
+    const placeholders = [
+        "Ask anything about an image...",
+        "What is in this photo?",
+        "Can you describe this scene?",
+        "Read the text in this image...",
+        "What is happening here?"
+    ];
+    let placeholderIdx = 0;
+    let charIdx = 0;
+    let isDeleting = false;
+    let typingTimer = null;
+
+    function typePlaceholder() {
+        if (!imageMessageInput) return;
+        
+        if (document.activeElement === imageMessageInput || imageMessageInput.value || voiceInputActive) {
+            clearTimeout(typingTimer);
+            imageMessageInput.placeholder = "Ask Curio about this image...";
+            return;
+        }
+
+        const currentText = placeholders[placeholderIdx];
+        
+        if (isDeleting) {
+            imageMessageInput.placeholder = currentText.substring(0, charIdx - 1) + "|";
+            charIdx--;
+        } else {
+            imageMessageInput.placeholder = currentText.substring(0, charIdx + 1) + "|";
+            charIdx++;
+        }
+
+        let typeSpeed = isDeleting ? 30 : 80;
+
+        if (!isDeleting && charIdx === currentText.length) {
+            imageMessageInput.placeholder = currentText; // remove cursor
+            typeSpeed = 2500; // Pause at end
+            isDeleting = true;
+        } else if (isDeleting && charIdx === 0) {
+            isDeleting = false;
+            placeholderIdx = (placeholderIdx + 1) % placeholders.length;
+            typeSpeed = 500; // Pause before new word
+        }
+
+        typingTimer = setTimeout(typePlaceholder, typeSpeed);
+    }
+    
+    if (imageMessageInput) {
+        imageMessageInput.addEventListener('focus', () => {
+            clearTimeout(typingTimer);
+            imageMessageInput.placeholder = "Ask Curio about this image...";
+        });
+        imageMessageInput.addEventListener('blur', () => {
+            if (!imageMessageInput.value && !voiceInputActive) {
+                typePlaceholder();
+            }
+        });
+        typePlaceholder();
+    }
 
     /*
     ========================================================
