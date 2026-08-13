@@ -581,7 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "What is in this photo?",
         "Can you describe this scene?",
         "Read the text in this image...",
-        "What is happening here?"
+        "What is happening here?",
     ];
     let placeholderIdx = 0;
     let charIdx = 0;

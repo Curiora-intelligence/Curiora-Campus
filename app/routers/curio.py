@@ -17,7 +17,6 @@ allowed_img_formats = {
     "image/gif": ".gif",
 }
 
-
 max_img_size = 15 * 1024 * 1024
 
 
