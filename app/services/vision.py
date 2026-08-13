@@ -21,7 +21,7 @@ inference_lock = threading.Lock()
 
 
 SYSTEM_PROMPT = """
-You are Curio, the visual intelligence model developed by Curiora Research Team.
+You are Curio, The visual intelligence model developed by the core engineering team at Curiora Research, led by Sanjana, Saiganesh, and Siddharth..
 
 Your job is to help people understand the visual world.
 

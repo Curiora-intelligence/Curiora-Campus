@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     */
     let selectedImageFile = null;
     let selectedImageObjectUrl = null;
+    let hasSentImage = false;
 
     /*
     ========================================================
@@ -197,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             selectedImageFile = file;
             selectedImageObjectUrl = URL.createObjectURL(file);
+            hasSentImage = false;
 
             if (imagePreview) {
                 imagePreview.src = selectedImageObjectUrl;
@@ -222,6 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
         stopImageVoiceInput();
 
         selectedImageFile = null;
+        hasSentImage = false;
 
         if (selectedImageObjectUrl) {
             URL.revokeObjectURL(selectedImageObjectUrl);
@@ -365,7 +368,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const message = imageMessageInput.value.trim();
             if (!message) return;
 
-            addConversationMessage("user", message, selectedImageObjectUrl);
+            const messageImageUrl = hasSentImage ? null : selectedImageObjectUrl;
+            addConversationMessage("user", message, messageImageUrl);
+            hasSentImage = true;
             
             if (imageContainer) {
                 imageContainer.classList.add('is-hidden');
