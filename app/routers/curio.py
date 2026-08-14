@@ -35,7 +35,6 @@ async def analyze_curio_image(request:Request,image: UploadFile = File(...),mess
         image   -> uploaded image
         message -> user's question/instruction
     """
-
      #To check image content type exist
     if not image.content_type:
         raise HTTPException(status_code=400,detail="Image content type is missing.")
@@ -84,3 +83,4 @@ async def analyze_curio_image(request:Request,image: UploadFile = File(...),mess
 
             except OSError:
                 pass
+
