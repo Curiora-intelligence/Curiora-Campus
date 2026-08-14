@@ -6,7 +6,8 @@ from fastapi.requests import Request
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 
-from app.services.vision import analyze_image
+from app.services.curio import CurioService
+curio_service = CurioService()
 
 curio_router = APIRouter(prefix="/curio",tags=["Curio routings"])
 
@@ -63,27 +64,16 @@ async def analyze_curio_image(request:Request,image: UploadFile = File(...),mess
             temporary_file.write(image_bytes) 
             temporary_path = Path(temporary_file.name)
 
-        answer = await run_in_threadpool(analyze_image,temporary_path,message)
+        answer = await run_in_threadpool(curio_service.respond,message,str(temporary_path))
 
         return {"success": True,"answer": answer,}
 
-    except FileNotFoundError as error:
+    except FileNotFoundError:
 
-        raise HTTPException(
-            status_code=400,
-            detail=str(error),
-        ) from error
+        raise HTTPException(status_code=400,detail="the internal error occured")
 
-    except Exception as error:
-
-        print("Curio image analysis failed:",repr(error),)
-
-        raise HTTPException(status_code=500,
-            detail=(
-                "Curio could not analyze the image. "
-                "Check the server logs for details."
-            ),
-        ) from error
+    except Exception:
+        raise HTTPException(status_code=500,detail=("An internall error occured Curio could not analyze the image.At this time "))
 
     finally:
 
