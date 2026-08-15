@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const videoPauseButton = app.querySelector('[data-curio-pause-video]');
     const microphonePauseButton = app.querySelector('[data-curio-mute-audio]');
     const cancelCameraButtons = app.querySelectorAll('[data-curio-close-camera]');
+    const captureButton = app.querySelector('[data-curio-capture]');
     const cameraContainer = app.querySelector('[data-curio-camera]');
     const cameraPreview = app.querySelector('[data-curio-video]');
     const imageContainer = app.querySelector('[data-curio-preview-shell]');
@@ -555,6 +556,53 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cameraButton) cameraButton.addEventListener("click", startCamera);
     if (cancelCameraButtons) {
         cancelCameraButtons.forEach(btn => btn.addEventListener("click", cancelCamera));
+    }
+
+    if (captureButton) {
+        captureButton.addEventListener("click", () => {
+            if (!cameraPreview || !cameraStream) return;
+
+            const canvas = document.createElement("canvas");
+            canvas.width = cameraPreview.videoWidth;
+            canvas.height = cameraPreview.videoHeight;
+            const ctx = canvas.getContext("2d");
+
+            // Flip horizontally (since video preview is usually mirrored)
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    console.error("Curiora: failed to capture image blob from canvas.");
+                    return;
+                }
+
+                const file = new File([blob], "camera-capture.jpg", { type: "image/jpeg" });
+
+                if (selectedImageObjectUrl) {
+                    URL.revokeObjectURL(selectedImageObjectUrl);
+                }
+
+                selectedImageFile = file;
+                selectedImageObjectUrl = URL.createObjectURL(file);
+                hasSentImage = false;
+
+                if (imagePreview) {
+                    imagePreview.src = selectedImageObjectUrl;
+                    imagePreview.alt = "Captured photo";
+                }
+
+                if (imageConversation) imageConversation.replaceChildren();
+                if (imageMessageInput) {
+                    imageMessageInput.value = "";
+                    imageMessageInput.style.height = "auto";
+                }
+
+                cancelCamera(); // Stops the stream and hides camera UI
+                setImageState(); // Activates the image preview state
+            }, "image/jpeg", 0.95);
+        });
     }
 
     if (videoPauseButton) {

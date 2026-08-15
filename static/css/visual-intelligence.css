@@ -172,66 +172,67 @@
     line-height: 1.5;
 }
 
-/* ===== Messages ===== */
+/* ===== Messages (Editorial Style) ===== */
 
 .curio-message {
     display: flex;
-    max-width: min(640px, 88%);
-    gap: 10px;
+    max-width: min(740px, 95%);
+    gap: 18px;
     color: var(--text);
-    font-size: 15px;
-    line-height: 1.55;
+    font-size: 17px;
+    line-height: 1.6;
     animation: curio-message-enter 350ms var(--ease-smooth) both;
+    letter-spacing: -0.01em;
 }
 
 .curio-message--assistant { align-self: flex-start; }
 
 .curio-message--assistant > div {
-    padding: 14px 18px;
-    border: 1px solid rgba(0, 0, 0, .05);
-    border-radius: 20px 20px 20px 6px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
+    padding: 3px 0 16px;
 }
 
 .curio-message--user {
     align-self: flex-end;
     display: flex;
     flex-direction: column;
-    padding: 13px 18px;
-    border-radius: 20px 20px 6px 20px;
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(var(--accent-rgb), .2);
+    padding: 3px 0 16px;
+    text-align: right;
+}
+
+.curio-message--user p {
+    color: var(--text-secondary);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
 }
 
 .curio-message--user img {
-    max-width: 240px;
-    max-height: 240px;
+    max-width: 300px;
+    max-height: 300px;
+    align-self: flex-end;
     object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
 }
 
 .curio-message--error { color: #9d3023; }
 
 .curio-message p { margin: 0; }
-.curio-message span { display: block; margin-top: 4px; line-height: 1.45; }
+.curio-message span { display: block; margin-top: 6px; line-height: 1.5; color: var(--text-secondary); font-size: 15px; }
 
 .curio-message-avatar {
     display: grid;
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
     place-items: center;
-    border-radius: 10px;
-    background: linear-gradient(145deg, #0b7ce9, #0067d3);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 750;
-    letter-spacing: .05em;
-    box-shadow: 0 4px 12px rgba(var(--accent-rgb), .18);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--accent);
+    font-size: 15px;
+    font-weight: 650;
+    box-shadow: 0 0 0 1px rgba(var(--accent-rgb), .2);
 }
 
 /* Thinking dots */
@@ -240,12 +241,9 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    min-height: 44px;
-    padding: 0 16px;
-    border: 1px solid rgba(0, 0, 0, .05);
-    border-radius: 20px 20px 20px 6px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
+    min-height: 24px;
+    padding: 0;
+    background: transparent;
 }
 
 .curio-thinking i {
@@ -616,9 +614,10 @@
     .curio-welcome h3 { font-size: 19px; }
     .curio-welcome p { font-size: 14px; }
 
-    .curio-message { max-width: 92%; font-size: 14px; }
-    .curio-message--assistant > div { padding: 12px 14px; }
-    .curio-message--user { padding: 11px 14px; }
+    .curio-message { max-width: 96%; font-size: 16px; gap: 12px; }
+    .curio-message--assistant > div { padding: 2px 0 12px; }
+    .curio-message--user { padding: 2px 0 12px; }
+    .curio-message--user p { font-size: 17px; }
 
     .curio-composer-area { padding: 0 16px 16px; }
     .curio-composer-row { gap: 4px; padding: 6px; border-radius: 22px; }
