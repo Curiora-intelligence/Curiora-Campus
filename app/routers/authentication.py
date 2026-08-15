@@ -1,13 +1,15 @@
 from fastapi import APIRouter,Form,Depends
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse,HTMLResponse
-from main import templates
+from fastapi.templating import Jinja2Templates
 import secrets,string
 
-auth_router=APIRouter()
+templates = Jinja2Templates(directory="templates")
+
+auth_router=APIRouter(tags={"authentication routes"})
 @auth_router.get("/",response_class=HTMLResponse)
 def home(request:Request):
-    return templates.TemplateResponse(request,"home.html")
+    return templates.TemplateResponse(request,"pages/home.html")
 
 @auth_router.get("/login-form",response_class=HTMLResponse)
 def login_form(request:Request):

@@ -16,12 +16,11 @@ from app.routers.authentication import auth_router
 from app.routers.campus import campus_router
 from app.routers.curio import curio_router
 
+app = FastAPI(title="saiganesh",version="1.0.0")
 
-app = FastAPI(title="saiganesh",version="1.0.0",docs_url=None,redoc_url=None,openapi_url=None)
+templates = Jinja2Templates(directory="templates")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
 app.include_router(auth_router)
 app.include_router(campus_router)
 app.include_router(curio_router)
-

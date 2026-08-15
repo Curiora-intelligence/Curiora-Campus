@@ -1,9 +1,12 @@
+from __future__ import annotations
 from fastapi.templating import Jinja2Templates
 from fastapi import APIRouter,Request
 from fastapi.responses import HTMLResponse,RedirectResponse
-from main import templates
+from fastapi.templating import Jinja2Templates
 
-campus_router=APIRouter(prefix="/campus",tags="campus routes")
+templates = Jinja2Templates(directory="templates")
+
+campus_router=APIRouter(prefix="/campus",tags=["campus routes"])
 
 @campus_router.get("/visual-intelligence", response_class=HTMLResponse)
 async def visual_intelligence(request: Request) -> HTMLResponse:
@@ -14,5 +17,3 @@ async def visual_intelligence(request: Request) -> HTMLResponse:
 @campus_router.get("/research")
 async def research_redirect() -> RedirectResponse:
     return RedirectResponse(url="/visual-intelligence", status_code=307)
-
-

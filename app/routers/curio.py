@@ -20,7 +20,6 @@ allowed_img_formats = {
 
 max_img_size = 15 * 1024 * 1024
 
-
 @curio_router.post("/analyze")
 async def analyze_curio_image(request:Request,image: UploadFile = File(...),message: str = Form("")):
     """
