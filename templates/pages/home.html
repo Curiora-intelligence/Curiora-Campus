@@ -3,8 +3,8 @@
 {% block title %}Curiora Campus{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/home.css') }}?v=4">
-<link rel="stylesheet" href="{{ url_for('static', path='css/visual-intelligence.css') }}?v=4">
+<link rel="stylesheet" href="{{ url_for('static', path='css/home.css') }}?v=5">
+<link rel="stylesheet" href="{{ url_for('static', path='css/visual-intelligence.css') }}?v=5">
 {% endblock %}
 
 {% block body_class %}home-page{% endblock %}
@@ -30,18 +30,12 @@
     </div>
 </section>
 
-<section class="curio-section animate-fade-in" id="visual-intelligence">
-    <div class="curio-section-heading">
-        <p class="eyebrow">VISUAL INTELLIGENCE</p>
-        <h2>See more. Ask better.</h2>
-        <p>Upload an image or use your camera, then let Curio help you understand what is in front of you.</p>
-    </div>
-
+<section class="curio-section curio-section--workspace" id="visual-intelligence">
     {% include "components/curio_composer.html" %}
 </section>
 
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', path='js/visual-intelligence.js') }}?v=4" defer></script>
+<script src="{{ url_for('static', path='js/visual-intelligence.js') }}?v=5" defer></script>
 {% endblock %}

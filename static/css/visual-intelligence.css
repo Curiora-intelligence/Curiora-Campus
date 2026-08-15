@@ -1,4 +1,6 @@
-/* Curio: a camera, upload, voice, and conversation surface. */
+/* Curio Workspace — full-page conversational intelligence surface. */
+
+/* ===== Page-level hero (kept for standalone visual-intelligence page) ===== */
 
 .visual-page-hero {
     max-width: var(--max-width);
@@ -28,63 +30,56 @@
     line-height: 1.5;
 }
 
+/* ===== App container ===== */
+
 .curio-app {
-    width: min(880px, 100%);
-    margin: auto;
+    width: min(920px, 100%);
+    margin: 0 auto;
+    animation: curio-workspace-enter 600ms var(--ease-standard) both;
 }
 
-.curio-card {
-    position: relative;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    background: linear-gradient(155deg, rgba(255, 255, 255, .98), rgba(246, 249, 253, .94));
-    box-shadow: var(--shadow-medium), inset 0 1px 0 #fff;
+/* ===== Workspace — the primary surface ===== */
+
+.curio-workspace {
+    display: flex;
+    flex-direction: column;
+    min-height: 70vh;
+    border-radius: var(--radius-large);
+    background: linear-gradient(180deg, rgba(246, 249, 253, .5) 0%, rgba(255, 255, 255, .3) 100%);
+    border: 1px solid rgba(0, 0, 0, .04);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .8) inset;
+    overflow: hidden;
 }
 
-.curio-card::before {
-    position: absolute;
-    top: 0;
-    right: 8%;
-    left: 8%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), .34), transparent);
-    content: "";
-}
+/* ===== Top bar — minimal identity ===== */
 
-.curio-card-header {
+.curio-workspace-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 58px;
-    padding: 0 12px 0 10px;
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, .04);
 }
 
-.curio-identity,
-.curio-ready,
-.curio-image-preview-meta,
-.curio-camera-toolbar,
-.curio-camera-actions {
+.curio-identity {
     display: flex;
     align-items: center;
+    gap: 11px;
 }
 
-.curio-identity { gap: 10px; }
-
-.curio-mark,
-.curio-message-avatar {
+.curio-mark {
     display: grid;
-    width: 34px;
-    height: 34px;
-    flex: 0 0 34px;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
     place-items: center;
-    border-radius: 11px;
+    border-radius: 12px;
     background: linear-gradient(145deg, #0b7ce9, #0067d3);
     color: #fff;
-    box-shadow: 0 5px 14px rgba(var(--accent-rgb), .2);
+    box-shadow: 0 5px 16px rgba(var(--accent-rgb), .22);
 }
 
-.curio-mark svg { width: 19px; height: 19px; }
+.curio-mark svg { width: 18px; height: 18px; }
 
 .curio-identity p {
     margin: 0;
@@ -93,22 +88,23 @@
     letter-spacing: .14em;
 }
 
-.curio-identity span,
-.curio-ready,
-.curio-status,
-.curio-message span {
+.curio-identity span {
+    display: block;
+    margin-top: 2px;
     color: var(--text-secondary);
     font-size: 12px;
 }
 
-.curio-identity span { display: block; margin-top: 2px; }
-
 .curio-ready {
+    display: flex;
+    align-items: center;
     gap: 7px;
-    padding: 7px 10px;
-    border: 1px solid rgba(var(--accent-rgb), .1);
+    padding: 7px 12px;
+    border: 1px solid rgba(var(--accent-rgb), .08);
     border-radius: var(--radius-pill);
-    background: rgba(var(--accent-rgb), .045);
+    background: rgba(var(--accent-rgb), .035);
+    color: var(--text-secondary);
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -117,58 +113,105 @@
     height: 7px;
     border-radius: 50%;
     background: #23a45a;
-    box-shadow: 0 0 0 4px rgba(35, 164, 90, .1);
+    box-shadow: 0 0 0 3px rgba(35, 164, 90, .1);
 }
+
+/* ===== Conversation — the primary surface, fills available space ===== */
 
 .curio-conversation {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    min-height: 190px;
-    max-height: 350px;
-    padding: 26px 18px 20px;
+    gap: 16px;
+    flex: 1;
+    min-height: 0;
+    padding: 32px 28px 24px;
     overflow-y: auto;
-    border: 1px solid rgba(0, 0, 0, .045);
-    border-radius: var(--radius-large);
-    background: rgba(255, 255, 255, .66);
     scroll-behavior: smooth;
 }
 
+/* Empty / welcome state */
+
+.curio-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 60px 24px;
+    animation: curio-welcome-enter 700ms var(--ease-standard) both 200ms;
+}
+
+.curio-welcome-mark {
+    display: grid;
+    width: 56px;
+    height: 56px;
+    place-items: center;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #0b7ce9, #0067d3);
+    color: #fff;
+    box-shadow: 0 12px 32px rgba(var(--accent-rgb), .18);
+    margin-bottom: 24px;
+}
+
+.curio-welcome-mark svg { width: 26px; height: 26px; }
+
+.curio-welcome h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 650;
+    letter-spacing: -.02em;
+    color: var(--text);
+}
+
+.curio-welcome p {
+    margin: 10px 0 0;
+    max-width: 380px;
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* ===== Messages ===== */
+
 .curio-message {
     display: flex;
-    max-width: min(640px, 92%);
+    max-width: min(640px, 88%);
     gap: 10px;
     color: var(--text);
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 15px;
+    line-height: 1.55;
+    animation: curio-message-enter 350ms var(--ease-smooth) both;
 }
 
 .curio-message--assistant { align-self: flex-start; }
 
 .curio-message--assistant > div {
-    padding: 12px 14px;
-    border: 1px solid rgba(0, 0, 0, .055);
-    border-radius: 18px 18px 18px 5px;
+    padding: 14px 18px;
+    border: 1px solid rgba(0, 0, 0, .05);
+    border-radius: 20px 20px 20px 6px;
     background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
 }
 
 .curio-message--user {
     align-self: flex-end;
     display: flex;
     flex-direction: column;
-    padding: 11px 14px;
-    border-radius: 18px 18px 5px 18px;
+    padding: 13px 18px;
+    border-radius: 20px 20px 6px 20px;
     background: var(--accent);
     color: #fff;
+    box-shadow: 0 4px 16px rgba(var(--accent-rgb), .2);
 }
 
 .curio-message--user img {
     max-width: 240px;
     max-height: 240px;
     object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
 }
 
 .curio-message--error { color: #9d3023; }
@@ -177,29 +220,37 @@
 .curio-message span { display: block; margin-top: 4px; line-height: 1.45; }
 
 .curio-message-avatar {
-    width: 28px;
-    height: 28px;
-    flex-basis: 28px;
-    border-radius: 9px;
+    display: grid;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    place-items: center;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #0b7ce9, #0067d3);
+    color: #fff;
     font-size: 11px;
     font-weight: 750;
     letter-spacing: .05em;
+    box-shadow: 0 4px 12px rgba(var(--accent-rgb), .18);
 }
+
+/* Thinking dots */
 
 .curio-thinking {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    min-height: 42px;
-    padding: 0 14px;
-    border: 1px solid rgba(0, 0, 0, .055);
-    border-radius: 18px 18px 18px 5px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid rgba(0, 0, 0, .05);
+    border-radius: 20px 20px 20px 6px;
     background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
 }
 
 .curio-thinking i {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--text-tertiary);
     animation: curio-dot 1.1s ease-in-out infinite;
@@ -208,44 +259,54 @@
 .curio-thinking i:nth-child(2) { animation-delay: .12s; }
 .curio-thinking i:nth-child(3) { animation-delay: .24s; }
 
+/* ===== Composer area — anchored at bottom ===== */
+
+.curio-composer-area {
+    position: relative;
+    padding: 0 28px 20px;
+    border-top: 1px solid rgba(0, 0, 0, .04);
+    background: rgba(255, 255, 255, .6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Image preview — above the composer */
+
 .curio-image-preview {
-    position: absolute;
-    bottom: calc(100% - 8px);
-    left: 0;
-    z-index: 10;
-    width: 100%;
-    max-width: min(360px, calc(100% - 20px));
-    margin: 0;
+    margin: 16px 0 12px;
+    max-width: min(340px, 100%);
     overflow: hidden;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border, rgba(0,0,0,.08));
     border-radius: 16px;
     background: #fff;
     transform-origin: bottom left;
-    transition: transform 400ms cubic-bezier(.2,.8,.2,1), opacity 400ms ease, visibility 400ms;
+    transition: transform 400ms cubic-bezier(.2,.8,.2,1), opacity 400ms ease, max-height 400ms ease;
     opacity: 1;
     transform: translateY(0) scale(1);
-    visibility: visible;
 }
 
 .curio-image-preview.is-hidden {
     opacity: 0;
-    transform: scale(0.25) translateY(40px) translateX(-40px);
-    visibility: hidden;
+    transform: scale(0.3) translateY(20px);
     pointer-events: none;
+    max-height: 0;
+    margin: 0;
+    border-width: 0;
 }
 
 .curio-image-preview img {
     display: block;
     width: 100%;
-    max-width: 358px;
-    max-height: 210px;
+    max-height: 200px;
     object-fit: cover;
 }
 
 .curio-image-preview-meta {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 8px 9px 8px 11px;
+    padding: 8px 10px 8px 12px;
     color: var(--text-secondary);
     font-size: 12px;
 }
@@ -268,59 +329,130 @@
     background: rgba(0, 0, 0, .05);
     color: var(--text-secondary);
     cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 .curio-image-preview-meta button:hover,
-.curio-camera-toolbar button:hover { background: rgba(0, 0, 0, .09); color: var(--text); }
+.curio-camera-toolbar button:hover {
+    background: rgba(0, 0, 0, .1);
+    color: var(--text);
+}
+
 .curio-image-preview-meta svg,
 .curio-camera-toolbar svg { width: 16px; height: 16px; }
 
+/* Camera inline — above the composer */
+
+.curio-camera-inline {
+    margin: 16px 0 12px;
+    padding: 16px;
+    border: 1px solid var(--border, rgba(0,0,0,.08));
+    border-radius: 16px;
+    background: #fff;
+    transform-origin: bottom left;
+    transition: transform 400ms cubic-bezier(.2,.8,.2,1), opacity 400ms ease, max-height 400ms ease;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.curio-camera-inline.is-hidden {
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+    pointer-events: none;
+    max-height: 0;
+    margin: 0;
+    padding: 0 16px;
+    border-width: 0;
+}
+
+.curio-camera-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 2px 2px 14px;
+}
+
+.curio-camera-toolbar p { margin: 0; font-size: 16px; font-weight: 650; }
+.curio-camera-toolbar span { display: block; margin-top: 3px; color: var(--text-secondary); font-size: 12px; }
+
+.curio-camera-view {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: 18px;
+    background: #0b0e13;
+}
+
+.curio-camera-view video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+.curio-camera-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 14px;
+}
+
+.curio-camera-actions .button {
+    min-height: 42px;
+    min-width: 0;
+    padding: 10px 17px;
+    font-size: 14px;
+}
+
+/* ===== Composer form ===== */
+
 .curio-composer {
     position: relative;
-    padding-top: 12px;
-    display: flex;
-    flex-direction: column;
 }
 
 .curio-composer-row {
     display: flex;
     align-items: flex-end;
-    gap: 7px;
+    gap: 6px;
     padding: 8px;
-    border: 1px solid var(--border-strong);
-    border-radius: 24px;
-    background: rgba(255, 255, 255, .96);
-    box-shadow: 0 12px 32px rgba(0, 50, 120, .07), inset 0 1px 0 #fff;
+    border: 1px solid rgba(0, 0, 0, .08);
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(0, 40, 100, .06), 0 1px 3px rgba(0, 0, 0, .04);
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .curio-composer-row:focus-within {
-    border-color: rgba(var(--accent-rgb), .48);
-    box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .09), 0 12px 32px rgba(0, 50, 120, .07);
+    border-color: rgba(var(--accent-rgb), .4);
+    box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .07), 0 8px 32px rgba(0, 40, 100, .06);
 }
 
 .curio-composer textarea {
     width: 100%;
-    min-height: 40px;
+    min-height: 42px;
     max-height: 140px;
-    padding: 10px 3px;
+    padding: 11px 4px;
     resize: none;
     border: 0;
     outline: 0;
     background: transparent;
     color: var(--text);
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.45;
 }
 
 .curio-composer textarea::placeholder { color: var(--text-tertiary); }
 
+/* ===== Composer buttons ===== */
+
 .curio-icon-button,
 .curio-send-button {
     display: grid;
-    width: 40px;
-    height: 40px;
-    flex: 0 0 40px;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
     place-items: center;
     border-radius: 50%;
     cursor: pointer;
@@ -328,48 +460,64 @@
 }
 
 .curio-icon-button {
-    background: rgba(0, 0, 0, .05);
-    color: var(--text);
+    background: rgba(0, 0, 0, .04);
+    color: var(--text-secondary);
 }
 
-.curio-icon-button:hover { background: rgba(0, 0, 0, .09); transform: translateY(-1px); }
+.curio-icon-button:hover {
+    background: rgba(0, 0, 0, .08);
+    color: var(--text);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+}
+
 .curio-icon-button svg,
 .curio-send-button svg { width: 20px; height: 20px; }
 
 .curio-send-button {
     background: var(--accent);
     color: #fff;
-    box-shadow: 0 5px 13px rgba(var(--accent-rgb), .24);
+    box-shadow: 0 6px 18px rgba(var(--accent-rgb), .25);
 }
 
-.curio-send-button:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-1px); }
+.curio-send-button:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(var(--accent-rgb), .3);
+}
 
 .curio-send-button:disabled,
 .curio-icon-button:disabled {
     cursor: not-allowed;
-    opacity: .42;
+    opacity: .38;
     transform: none;
+    box-shadow: none;
 }
 
+/* Mic listening state */
+
 .curio-mic-button.is-listening {
-    background: rgba(var(--accent-rgb), .11);
+    background: rgba(var(--accent-rgb), .1);
     color: var(--accent);
     box-shadow: 0 0 0 5px rgba(var(--accent-rgb), .08);
     animation: curio-mic-pulse 1.5s ease-in-out infinite;
 }
 
+/* ===== Attachment menu ===== */
+
 .curio-attachment-menu {
     position: absolute;
-    bottom: calc(100% + 7px);
-    left: 0;
+    bottom: calc(100% + 8px);
+    left: 8px;
     z-index: 8;
     width: 180px;
     padding: 6px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(0, 0, 0, .06);
     border-radius: 16px;
     background: rgba(255, 255, 255, .96);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, .12);
-    backdrop-filter: blur(18px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .curio-attachment-menu button {
@@ -385,14 +533,19 @@
     font-size: 13px;
     font-weight: 550;
     text-align: left;
+    transition: background var(--transition-fast);
 }
 
 .curio-attachment-menu button:hover { background: var(--surface); }
 .curio-attachment-menu svg { width: 18px; height: 18px; color: var(--text-secondary); }
 
+/* ===== Status & guardrails ===== */
+
 .curio-status {
     min-height: 17px;
-    margin: 9px 6px 1px;
+    margin: 10px 0 0;
+    color: var(--text-tertiary);
+    font-size: 12px;
     text-align: center;
 }
 
@@ -404,86 +557,77 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 8px 16px;
-    margin-top: 15px;
+    margin-top: 16px;
+    padding-bottom: 8px;
     color: var(--text-tertiary);
     font-size: 12px;
 }
 
 .curio-guardrails span + span::before {
     margin-right: 16px;
-    color: var(--border-strong);
-    content: "•";
+    color: rgba(0, 0, 0, .12);
+    content: "·";
 }
 
-.curio-camera-inline {
-    position: absolute;
-    bottom: calc(100% - 8px);
-    left: 0;
-    right: 0;
-    z-index: 10;
-    width: 100%;
-    margin: 0;
-    padding: 16px;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: #fff;
-    transform-origin: bottom left;
-    transition: transform 400ms cubic-bezier(.2,.8,.2,1), opacity 400ms ease, visibility 400ms;
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    visibility: visible;
+/* ===== Animations ===== */
+
+@keyframes curio-workspace-enter {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.curio-camera-inline.is-hidden {
-    opacity: 0;
-    transform: scale(0.25) translateY(40px) translateX(-40px);
-    visibility: hidden;
-    pointer-events: none;
+@keyframes curio-welcome-enter {
+    from { opacity: 0; transform: translateY(12px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.curio-camera-toolbar { justify-content: space-between; gap: 18px; padding: 2px 2px 14px; }
-.curio-camera-toolbar p { margin: 0; font-size: 16px; font-weight: 650; }
-.curio-camera-toolbar span { display: block; margin-top: 3px; color: var(--text-secondary); font-size: 12px; }
-
-.curio-camera-view {
-    overflow: hidden;
-    aspect-ratio: 4 / 3;
-    border-radius: 18px;
-    background: #0b0e13;
+@keyframes curio-message-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-.curio-camera-view video { display: block; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-.curio-camera-actions { justify-content: flex-end; gap: 10px; padding-top: 14px; }
-.curio-camera-actions .button { min-height: 42px; min-width: 0; padding: 10px 17px; font-size: 14px; }
 
 @keyframes curio-dot {
-    0%, 80%, 100% { transform: translateY(0); opacity: .45; }
-    40% { transform: translateY(-3px); opacity: 1; }
+    0%, 80%, 100% { transform: translateY(0); opacity: .4; }
+    40% { transform: translateY(-4px); opacity: 1; }
 }
 
 @keyframes curio-mic-pulse {
     0%, 100% { box-shadow: 0 0 0 5px rgba(var(--accent-rgb), .08); }
-    50% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), .12); }
+    50% { box-shadow: 0 0 0 9px rgba(var(--accent-rgb), .12); }
 }
+
+/* ===== Responsive ===== */
 
 @media (max-width: 700px) {
     .visual-page-hero { padding: 126px 18px 80px; }
     .visual-page-heading { margin-bottom: 34px; }
     .visual-page-heading h1 { font-size: clamp(44px, 13vw, 64px); }
     .visual-page-heading > p:last-child { font-size: 16px; }
-    .curio-card { padding: 8px; border-radius: 28px; }
-    .curio-card-header { padding: 2px 6px 2px 4px; }
+
+    .curio-app { margin: 0 8px; }
+    .curio-workspace { min-height: 65vh; border-radius: 24px; }
+    .curio-workspace-bar { padding: 16px 18px 14px; }
     .curio-ready { padding: 6px 8px; font-size: 11px; }
     .curio-ready i { display: none; }
-    .curio-conversation { min-height: 190px; padding: 20px 12px 16px; border-radius: 22px; }
-    .curio-message { max-width: 95%; font-size: 13px; }
-    .curio-message--assistant > div { padding: 10px 12px; }
+
+    .curio-conversation { padding: 24px 16px 18px; gap: 12px; }
+    .curio-welcome { padding: 40px 16px; }
+    .curio-welcome-mark { width: 48px; height: 48px; border-radius: 15px; }
+    .curio-welcome h3 { font-size: 19px; }
+    .curio-welcome p { font-size: 14px; }
+
+    .curio-message { max-width: 92%; font-size: 14px; }
+    .curio-message--assistant > div { padding: 12px 14px; }
+    .curio-message--user { padding: 11px 14px; }
+
+    .curio-composer-area { padding: 0 16px 16px; }
     .curio-composer-row { gap: 4px; padding: 6px; border-radius: 22px; }
     .curio-icon-button, .curio-send-button { width: 38px; height: 38px; flex-basis: 38px; }
-    .curio-composer textarea { font-size: 13px; }
+    .curio-composer textarea { font-size: 14px; min-height: 38px; }
+
     .curio-guardrails { gap: 6px 10px; font-size: 11px; }
     .curio-guardrails span + span::before { margin-right: 10px; }
-    .curio-camera-inline { padding: 12px; border-radius: 22px; }
-    .curio-camera-inline.is-hidden { padding: 0 12px; }
+
+    .curio-camera-inline { padding: 12px; border-radius: 18px; }
     .curio-camera-actions .button { flex: 1; }
 }

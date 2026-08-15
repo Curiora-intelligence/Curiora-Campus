@@ -112,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!selectedImageFile) imageContainer.hidden = true;
             }, 400);
         }
-        if (imageConversation) imageConversation.hidden = true;
         if (imageStatus) imageStatus.textContent = "Curio is ready";
         
         if (videoPauseButton) videoPauseButton.textContent = "Pause video";
@@ -139,8 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!selectedImageFile && cameraActive) imageContainer.hidden = true;
             }, 400);
         }
-        if (imageConversation) imageConversation.hidden = true;
-
         if (cameraStatus) cameraStatus.textContent = "Curio is observing";
         
         app.classList.add("camera-active");
@@ -159,8 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
             void imageContainer.offsetWidth;
             imageContainer.classList.remove('is-hidden');
         }
-        if (imageConversation) imageConversation.hidden = false;
-
         if (imageStatus) imageStatus.textContent = "Curio is ready to examine this image";
         if (imageContainer) imageContainer.classList.add("image-active");
 
@@ -259,6 +254,10 @@ document.addEventListener("DOMContentLoaded", () => {
     */
     function addConversationMessage(role, message, imageUrl = null) {
         if (!imageConversation) return;
+
+        // Hide welcome state when conversation begins
+        const welcome = imageConversation.querySelector('.curio-welcome');
+        if (welcome) welcome.remove();
 
         const messageElement = document.createElement("article");
         

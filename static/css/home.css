@@ -146,6 +146,10 @@
     margin: auto;
 }
 
+.curio-section--workspace {
+    padding: 80px 24px 80px;
+}
+
 .curio-section-heading {
     max-width: 650px;
     margin: 0 auto 52px;
