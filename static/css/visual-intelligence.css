@@ -333,6 +333,19 @@
     max-width: 820px;
 }
 
+.curio-composer::before {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 10%;
+    right: 10%;
+    height: 60px;
+    background: radial-gradient(ellipse at center, rgba(11, 124, 233, 0.18) 0%, rgba(11, 124, 233, 0) 70%);
+    filter: blur(24px);
+    pointer-events: none;
+    z-index: -1;
+}
+
 .curio-composer-row {
     display: flex;
     align-items: flex-end;
