@@ -1,229 +1,140 @@
 from __future__ import annotations
 
-import gc
-from enum import Enum
 from threading import Lock
 
-import mlx.core as mx
-from mlx_vlm import load
-from mlx_vlm.utils import load_config
+from app.core.runtime import (
+    RuntimeInfo,
+    RuntimeKind,
+    detect_runtime,
+)
+from app.runtimes.base import RuntimeAdapter
+from app.runtimes.mlx_runtime import MLXRuntime
+from app.runtimes.torch_runtime import TorchRuntime
 
 
-class ModelMode(str, Enum):
+class ModelMode(str):
     TEXT = "text"
     VISION = "vision"
 
 
 class ModelGateway:
     """
-    Central model lifecycle manager for Curio.
+    Curio model gateway.
 
-    Development target:
-        M4 MacBook Air / 16 GB unified memory
+    Responsibilities:
 
-    Policy:
-        Keep only one heavyweight model resident at a time.
+    1. Detect the best available execution runtime.
+    2. Keep runtime-specific implementation details out
+       of Curio's application/service layer.
+    3. Route multimodal inference through the selected
+       runtime adapter.
+    4. Prepare the architecture for future LLM/VLM
+       model switching.
+
+    Runtime priority:
+
+        Apple Silicon + MLX
+            ↓
+        NVIDIA + CUDA
+            ↓
+        CPU + PyTorch
     """
 
-    VISION_MODEL_ID = (
-        "mlx-community/Qwen3-VL-8B-Instruct-8bit"
-    )
+    VISION_MODEL_ID = ("mlx-community/Qwen3-VL-8B-Instruct-8bit")
+
+    TORCH_VISION_MODEL_ID = ("Qwen/Qwen3-VL-8B-Instruct")
 
     def __init__(self) -> None:
+
         self._lock = Lock()
 
-        self._active_mode: ModelMode | None = None
-
-        self._vision_model = None
-        self._vision_processor = None
-        self._vision_config = None
-
-        self._text_model = None
-        self._text_processor = None
+        self._runtime_info: RuntimeInfo | None = None
+        self._runtime: RuntimeAdapter | None = None
 
     # =========================================================
-    # PUBLIC API
+    # RUNTIME
     # =========================================================
 
-    def activate(self, mode: ModelMode) -> None:
-        """
-        Make the requested model the active resident model.
-        """
+    @property
+    def runtime_info(self) -> RuntimeInfo:
+
+        if self._runtime_info is None:
+            self._runtime_info = detect_runtime()
+
+        return self._runtime_info
+
+    @property
+    def runtime(self) -> RuntimeAdapter:
+
+        if self._runtime is None:
+
+            info = self.runtime_info
+
+            print(
+                "Curio runtime selected:"
+            )
+            print(
+                f"  backend: {info.kind.value}"
+            )
+            print(
+                f"  device: {info.device_name}"
+            )
+            print(
+                f"  reason: {info.reason}"
+            )
+
+            if info.kind == RuntimeKind.MLX:
+
+                self._runtime = MLXRuntime()
+
+            elif info.kind == RuntimeKind.CUDA:
+
+                self._runtime = TorchRuntime(
+                    device="cuda"
+                )
+
+            elif info.kind == RuntimeKind.CPU:
+
+                self._runtime = TorchRuntime(
+                    device="cpu"
+                )
+
+            else:
+                raise RuntimeError(
+                    f"Unsupported Curio runtime: "
+                    f"{info.kind}"
+                )
+
+        return self._runtime
+
+    # =========================================================
+    # VISION
+    # =========================================================
+
+    def generate_vision(self,*,image_path: str,prompt: str,max_tokens: int = 384,temperature: float = 0.2) -> str:
 
         with self._lock:
 
-            if self._active_mode == mode:
-                return
+            model_id = (self.VISION_MODEL_ID if self.runtime_info.kind == RuntimeKind.MLX else self.TORCH_VISION_MODEL_ID)
 
-            print(
-                f"Curio model switch: "
-                f"{self._active_mode} -> {mode}"
+            return self.runtime.generate_vision(
+                model_id=model_id,
+                image_path=image_path,
+                prompt=prompt,
+                max_tokens=max_tokens,
+                temperature=temperature,
             )
-
-            self._release_active_model()
-
-            if mode == ModelMode.VISION:
-                self._load_vision_model()
-
-            elif mode == ModelMode.TEXT:
-                self._load_text_model()
-
-            else:
-                raise ValueError(
-                    f"Unsupported model mode: {mode}"
-                )
-
-            self._active_mode = mode
-
-    def get_active_mode(self) -> ModelMode | None:
-        return self._active_mode
-
-    def get_vision_components(self):
-        """
-        Return:
-            model,
-            processor,
-            config
-
-        Only valid after activate(VISION).
-        """
-
-        if self._active_mode != ModelMode.VISION:
-            raise RuntimeError(
-                "Vision model is not active."
-            )
-
-        if (
-            self._vision_model is None
-            or self._vision_processor is None
-            or self._vision_config is None
-        ):
-            raise RuntimeError(
-                "Vision model components are unavailable."
-            )
-
-        return (
-            self._vision_model,
-            self._vision_processor,
-            self._vision_config,
-        )
-
-    def get_text_components(self):
-        """
-        Return:
-            model,
-            processor
-
-        Only valid after activate(TEXT).
-        """
-
-        if self._active_mode != ModelMode.TEXT:
-            raise RuntimeError(
-                "Text model is not active."
-            )
-
-        if (
-            self._text_model is None
-            or self._text_processor is None
-        ):
-            raise RuntimeError(
-                "Text model components are unavailable."
-            )
-
-        return (
-            self._text_model,
-            self._text_processor,
-        )
 
     # =========================================================
-    # MODEL LOADING
+    # LIFECYCLE
     # =========================================================
 
-    def _load_vision_model(self) -> None:
+    def release(self) -> None:
 
-        print(
-            "Loading Curio vision model..."
-        )
+        with self._lock:
 
-        print(
-            f"Model: {self.VISION_MODEL_ID}"
-        )
+            if self._runtime is not None:
+                self._runtime.release()
 
-        (
-            self._vision_model,
-            self._vision_processor,
-        ) = load(
-            self.VISION_MODEL_ID
-        )
-
-        self._vision_config = load_config(
-            self.VISION_MODEL_ID
-        )
-
-        print(
-            "Curio vision model loaded."
-        )
-
-    def _load_text_model(self) -> None:
-        """
-        Placeholder for gpt-oss integration.
-
-        We are intentionally not loading a text model yet.
-        """
-
-        raise NotImplementedError(
-            "Text model integration is the next step."
-        )
-
-    # =========================================================
-    # MEMORY MANAGEMENT
-    # =========================================================
-
-    def _release_active_model(self) -> None:
-
-        if self._active_mode == ModelMode.VISION:
-
-            print(
-                "Releasing Curio vision model..."
-            )
-
-            self._vision_model = None
-            self._vision_processor = None
-            self._vision_config = None
-
-        elif self._active_mode == ModelMode.TEXT:
-
-            print(
-                "Releasing Curio text model..."
-            )
-
-            self._text_model = None
-            self._text_processor = None
-
-        self._active_mode = None
-
-        self._clear_memory()
-
-    @staticmethod
-    def _clear_memory() -> None:
-
-        gc.collect()
-
-        try:
-            mx.eval(
-                mx.array(
-                    0,
-                    dtype=mx.float32,
-                )
-            )
-
-        except Exception:
-            pass
-
-        try:
-            mx.metal.clear_cache()
-
-        except Exception:
-            pass
-
-        gc.collect()
+            self._runtime = None
+            self._runtime_info = None

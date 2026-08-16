@@ -16,7 +16,7 @@ from app.routers.authentication import auth_router
 from app.routers.campus import campus_router
 from app.routers.curio import curio_router
 
-app = FastAPI(title="saiganesh",version="1.0.0")
+app = FastAPI(title="saiganesh",version="0.141.0",docs_url=None,openapi_external_docs=None,redoc_url=None,openapi_url=None)
 
 templates = Jinja2Templates(directory="templates")
 
