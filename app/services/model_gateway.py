@@ -2,11 +2,7 @@ from __future__ import annotations
 
 from threading import Lock
 
-from app.core.runtime import (
-    RuntimeInfo,
-    RuntimeKind,
-    detect_runtime,
-)
+from app.core.runtime import (RuntimeInfo,RuntimeKind,detect_runtime)
 from app.runtimes.base import RuntimeAdapter
 from app.runtimes.mlx_runtime import MLXRuntime
 from app.runtimes.torch_runtime import TorchRuntime
@@ -69,19 +65,6 @@ class ModelGateway:
         if self._runtime is None:
 
             info = self.runtime_info
-
-            print(
-                "Curio runtime selected:"
-            )
-            print(
-                f"  backend: {info.kind.value}"
-            )
-            print(
-                f"  device: {info.device_name}"
-            )
-            print(
-                f"  reason: {info.reason}"
-            )
 
             if info.kind == RuntimeKind.MLX:
 
