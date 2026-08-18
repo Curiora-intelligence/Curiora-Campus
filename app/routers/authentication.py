@@ -6,6 +6,10 @@ import secrets,string
 
 templates = Jinja2Templates(directory="templates")
 
+async def cap():
+    return await "".join(secrets.SystemRandom().choices(string.ascii_letters+string.digits,k=6))
+
+
 auth_router=APIRouter(tags={"authentication routes"})
 @auth_router.get("/",response_class=HTMLResponse)
 def home(request:Request):

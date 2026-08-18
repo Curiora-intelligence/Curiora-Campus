@@ -271,9 +271,69 @@ document.addEventListener("DOMContentLoaded", () => {
             avatar.textContent = "C";
             
             const div = document.createElement("div");
-            const p = document.createElement("p");
-            p.textContent = message;
-            div.appendChild(p);
+            if (message) {
+                if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+                    const rawHtml = marked.parse(message);
+                    const cleanHtml = DOMPurify.sanitize(rawHtml);
+                    const markdownContainer = document.createElement("div");
+                    markdownContainer.className = "curio-markdown";
+                    markdownContainer.innerHTML = cleanHtml;
+                    
+                    markdownContainer.querySelectorAll('pre').forEach(pre => {
+                        const code = pre.querySelector('code');
+                        let languageName = 'Code';
+                        if (code) {
+                            const match = /language-(\w+)/.exec(code.className);
+                            if (match) languageName = match[1].charAt(0).toUpperCase() + match[1].slice(1);
+                        }
+                        
+                        const container = document.createElement('div');
+                        container.className = 'curio-code-container';
+                        
+                        const header = document.createElement('div');
+                        header.className = 'curio-code-header';
+                        
+                        const langLabel = document.createElement('span');
+                        langLabel.className = 'curio-code-lang';
+                        langLabel.textContent = languageName;
+                        
+                        const copyIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle; display: inline-block; transform: translateY(-1px);"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+                        const checkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle; display: inline-block; transform: translateY(-1px);"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                        
+                        const copyBtn = document.createElement('button');
+                        copyBtn.className = 'curio-code-copy';
+                        copyBtn.innerHTML = copyIcon + 'Copy';
+                        copyBtn.setAttribute('type', 'button');
+                        
+                        copyBtn.addEventListener('click', async () => {
+                            try {
+                                await navigator.clipboard.writeText(pre.textContent);
+                                copyBtn.innerHTML = checkIcon + 'Copied';
+                                copyBtn.classList.add('copied');
+                                setTimeout(() => {
+                                    copyBtn.innerHTML = copyIcon + 'Copy';
+                                    copyBtn.classList.remove('copied');
+                                }, 2000);
+                            } catch (e) {
+                                console.error('Failed to copy', e);
+                            }
+                        });
+                        
+                        header.appendChild(langLabel);
+                        header.appendChild(copyBtn);
+                        container.appendChild(header);
+                        
+                        pre.parentNode.insertBefore(container, pre);
+                        container.appendChild(pre);
+                    });
+
+                    div.appendChild(markdownContainer);
+                } else {
+                    const p = document.createElement("p");
+                    p.textContent = message;
+                    div.appendChild(p);
+                }
+            }
             
             messageElement.appendChild(avatar);
             messageElement.appendChild(div);
@@ -287,26 +347,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 messageElement.appendChild(img);
             }
             
-            const p = document.createElement("p");
-            p.textContent = message;
-            messageElement.appendChild(p);
+            if (message) {
+                const p = document.createElement("p");
+                p.textContent = message;
+                messageElement.appendChild(p);
+            }
         }
 
         imageConversation.appendChild(messageElement);
         imageConversation.scrollTop = imageConversation.scrollHeight;
     }
 
-    async function prepareImageMessage(message) {
-        if (!selectedImageFile) return;
-
-        if (imageStatus) imageStatus.textContent = "Analyzing image...";
+    async function prepareCurioMessage(message) {
+        if (imageStatus) {
+            imageStatus.textContent = selectedImageFile ? "Analyzing image..." : "Thinking...";
+        }
         if (imageSendButton) imageSendButton.disabled = true;
 
         const thinkingId = "curio-thinking-" + Date.now();
         const thinkingHtml = `
             <span class="curio-message-avatar" aria-hidden="true">C</span>
             <div>
-                <div class="curio-thinking"><i></i><i></i><i></i></div>
+                <p class="curio-thinking-text">Thinking&hellip;</p>
             </div>
         `;
         const thinkingElement = document.createElement("article");
@@ -321,7 +383,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const formData = new FormData();
-            formData.append("image", selectedImageFile);
+            if (selectedImageFile) {
+                formData.append("image", selectedImageFile);
+            }
             formData.append("message", message);
 
             const response = await fetch("/curio/analyze", {
@@ -330,7 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (!response.ok) {
-                let detail = "Curio could not analyze the image.";
+                let detail = selectedImageFile ? "Curio could not analyze the image." : "Curio could not process the text.";
                 try {
                     const errorData = await response.json();
                     if (errorData.detail) detail = errorData.detail;
@@ -343,7 +407,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const thinkingBubble = document.getElementById(thinkingId);
             if (thinkingBubble) thinkingBubble.remove();
             
-            // Assume the API might return the answer in `answer` or similar
             const answerText = data.answer || data.result || "Analysis complete.";
             addConversationMessage("curio", answerText);
 
@@ -352,9 +415,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const thinkingBubble = document.getElementById(thinkingId);
             if (thinkingBubble) thinkingBubble.remove();
             
-            console.error("Curio image analysis failed:", error);
+            console.error("Curio analysis failed:", error);
             if (imageStatus) imageStatus.textContent = "Analysis failed";
-            addConversationMessage("curio", `I couldn't process that image. ${error.message}`);
+            addConversationMessage("curio", `I couldn't process that. ${error.message}`);
         } finally {
             if (imageSendButton) imageSendButton.disabled = false;
         }
@@ -363,14 +426,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (imageMessageForm) {
         imageMessageForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-            if (!selectedImageFile || !imageMessageInput) return;
+            if (!imageMessageInput) return;
 
-            const message = imageMessageInput.value.trim();
-            if (!message) return;
+            let message = imageMessageInput.value.trim();
+            
+            if (!selectedImageFile && !message) return;
 
-            const messageImageUrl = hasSentImage ? null : selectedImageObjectUrl;
+            const messageImageUrl = (selectedImageFile && !hasSentImage) ? selectedImageObjectUrl : null;
             addConversationMessage("user", message, messageImageUrl);
-            hasSentImage = true;
+            if (selectedImageFile) {
+                hasSentImage = true;
+            }
             
             if (imageContainer) {
                 imageContainer.classList.add('is-hidden');
@@ -382,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
             imageMessageInput.value = "";
             imageMessageInput.style.height = "auto";
 
-            await prepareImageMessage(message);
+            await prepareCurioMessage(message);
         });
     }
 

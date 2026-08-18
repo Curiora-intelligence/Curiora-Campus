@@ -48,6 +48,28 @@ class MLXRuntime(RuntimeAdapter):
             text = text.replace(marker, "")
 
         return text.strip()
+        
+    def _extract_final_response(self, text: str) -> str:
+        """
+        Extract the final user-visible response from Harmony structured output.
+        The model may output internal reasoning in an 'analysis' channel before
+        the 'final' channel. We must only return the final channel.
+        """
+        import re
+        
+        # Look for the final channel content
+        pattern = r"<\|channel\|>final<\|message\|>(.*?)(?:<\|end\|>|<\|start\|>|<\|channel\|>|$)"
+        match = re.search(pattern, text, re.DOTALL)
+        
+        if match:
+            # We found an explicit final channel, return only its content
+            answer = match.group(1).strip()
+            # Clean any stray markers that regex might have grabbed
+            return self._clean_text_output(answer)
+            
+        # Fallback: if GPT-OSS returns malformed structured output with no final channel,
+        # prefer a safe fallback message rather than exposing raw structured output.
+        return "I encountered an error generating a safe response. Please try again."
     
     def _clear_model(self) -> None:
         self._model = None
@@ -159,7 +181,7 @@ class MLXRuntime(RuntimeAdapter):
         else str(result)
         ).strip()
 
-        answer = self._clean_text_output(answer)
+        answer = self._extract_final_response(answer)
 
         if not answer:
             raise RuntimeError(
