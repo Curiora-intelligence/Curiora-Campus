@@ -67,6 +67,9 @@ class MLXRuntime(RuntimeAdapter):
             # Clean any stray markers that regex might have grabbed
             return self._clean_text_output(answer)
             
+        print("====== RAW GPT-OSS OUTPUT ======")
+        print(text)
+        print("================================")
         # Fallback: if GPT-OSS returns malformed structured output with no final channel,
         # prefer a safe fallback message rather than exposing raw structured output.
         return "I encountered an error generating a safe response. Please try again."

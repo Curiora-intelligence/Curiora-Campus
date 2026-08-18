@@ -36,7 +36,7 @@ MAX_IMAGE_SIZE = 15 * 1024 * 1024
 
 
 @curio_router.post("/analyze")
-async def analyze_curio_image(request: Request,image: UploadFile | None = File(None),message: str = Form(""),):
+async def analyze_curio_image(request: Request,image: UploadFile | None = File(None),message: str = Form(""),conversation_id: str | None = Form(None),):
     """
     Unified Curio endpoint.
 
@@ -73,16 +73,18 @@ async def analyze_curio_image(request: Request,image: UploadFile | None = File(N
     if image is None:
 
         try:
-            answer = await run_in_threadpool(
+            answer, new_conversation_id = await run_in_threadpool(
                 curio_service.respond,
                 message,
                 None,
+                conversation_id,
             )
 
             return {
                 "success": True,
                 "mode": "text",
                 "answer": answer,
+                "conversation_id": new_conversation_id,
             }
 
         except Exception as exc:
@@ -153,16 +155,18 @@ async def analyze_curio_image(request: Request,image: UploadFile | None = File(N
                 temporary_file.name
             )
 
-        answer = await run_in_threadpool(
+        answer, new_conversation_id = await run_in_threadpool(
             curio_service.respond,
             message,
             str(temporary_path),
+            conversation_id,
         )
 
         return {
             "success": True,
             "mode": "vision",
             "answer": answer,
+            "conversation_id": new_conversation_id,
         }
 
     except FileNotFoundError as exc:

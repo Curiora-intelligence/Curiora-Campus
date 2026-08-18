@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedImageFile = null;
     let selectedImageObjectUrl = null;
     let hasSentImage = false;
+    let currentConversationId = null;
 
     /*
     ========================================================
@@ -201,7 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 imagePreview.alt = `Selected image: ${file.name}`;
             }
 
-            if (imageConversation) imageConversation.replaceChildren();
             if (imageMessageInput) {
                 imageMessageInput.value = "";
                 imageMessageInput.style.height = "auto";
@@ -239,6 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (imageConversation) imageConversation.replaceChildren();
+        currentConversationId = null;
         if (imageContainer) imageContainer.classList.remove("image-active");
 
         setIdleState();
@@ -387,6 +388,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 formData.append("image", selectedImageFile);
             }
             formData.append("message", message);
+            
+            if (currentConversationId) {
+                formData.append("conversation_id", currentConversationId);
+            }
 
             const response = await fetch("/curio/analyze", {
                 method: "POST",
@@ -403,6 +408,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const data = await response.json();
+            
+            if (data.conversation_id) {
+                currentConversationId = data.conversation_id;
+            }
+            
+            // Clear image state so subsequent requests are text-only
+            if (selectedImageFile) {
+                selectedImageFile = null;
+                hasSentImage = false;
+                if (imageInput) imageInput.value = "";
+            }
             
             const thinkingBubble = document.getElementById(thinkingId);
             if (thinkingBubble) thinkingBubble.remove();
