@@ -74,7 +74,35 @@ class MLXRuntime(RuntimeAdapter):
         # prefer a safe fallback message rather than exposing raw structured output.
         return "I encountered an error generating a safe response. Please try again."
     
+    def _debug_memory(self, label: str) -> None:
+        import os
+        import psutil
+        process = psutil.Process(os.getpid())
+        rss_mb = process.memory_info().rss / (1024 * 1024)
+        
+        try:
+            import mlx.core as mx
+            active_mem = mx.metal.get_active_memory() / (1024 * 1024)
+            cache_mem = mx.metal.get_cache_memory() / (1024 * 1024)
+            metal_str = f"Metal Active: {active_mem:.2f}MB, Metal Cache: {cache_mem:.2f}MB"
+        except Exception:
+            metal_str = "Metal metrics not available"
+            
+        print(f"[{label}] RSS: {rss_mb:.2f}MB | {metal_str} | mode: {self._mode} | model_id: {self._model_id}")
+
     def _clear_model(self) -> None:
+        self._debug_memory("before release")
+        
+        # Explicitly delete old references
+        if self._model is not None:
+            del self._model
+        if self._processor is not None:
+            del self._processor
+        if self._tokenizer is not None:
+            del self._tokenizer
+        if self._config is not None:
+            del self._config
+            
         self._model = None
         self._processor = None
         self._tokenizer = None
@@ -86,19 +114,12 @@ class MLXRuntime(RuntimeAdapter):
 
         try:
             import mlx.core as mx
-
-            mx.clear_cache()
-
+            mx.metal.clear_cache()
         except Exception:
-            try:
-                import mlx.core as mx
-
-                mx.metal.clear_cache()
-
-            except Exception:
-                pass
+            pass
 
         gc.collect()
+        self._debug_memory("after release")
 
     def release(self) -> None:
         self._clear_model()
@@ -136,6 +157,7 @@ class MLXRuntime(RuntimeAdapter):
         print(
             "Curio LLM loaded through MLX."
         )
+        self._debug_memory("after load")
 
     def generate_text(
     self,
@@ -147,14 +169,29 @@ class MLXRuntime(RuntimeAdapter):
 
         self._ensure_text_model(model_id)
 
-        try:
-            formatted_prompt = self._tokenizer.apply_chat_template(
+        # Sanitize messages to avoid leaking harmony control tokens
+        for msg in messages:
+            if msg["role"] == "assistant":
+                for marker in (
+                    "<|channel|>analysis<|message|>",
+                    "<|channel|>final<|message|>",
+                    "<|end|>",
+                    "<|start|>"
+                ):
+                    msg["content"] = msg["content"].replace(marker, "")
+
+        formatted_prompt = self._tokenizer.apply_chat_template(
             messages,
             add_generation_prompt=True,
             tokenize=False,
         )
-        except Exception:
-            formatted_prompt = messages[-1]["content"]
+
+        print("====== DEBUG HARMONY PROMPT STATE ======")
+        print(f"Message count: {len(messages)}")
+        print(f"Roles: {[m['role'] for m in messages]}")
+        print(f"Message lengths: {[len(m['content']) for m in messages]}")
+        print(f"Formatted prompt length: {len(formatted_prompt)}")
+        print("========================================")
 
         sampler = make_sampler(
         temp=max(0.0, float(temperature)),
@@ -224,6 +261,7 @@ class MLXRuntime(RuntimeAdapter):
         print(
             "Curio VLM loaded through MLX."
         )
+        self._debug_memory("after load")
 
     def generate_vision(
         self,
