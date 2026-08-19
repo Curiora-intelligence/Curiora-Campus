@@ -98,7 +98,7 @@ class ModelGateway:
     def generate_text(
         self,
         *,
-        prompt: str,
+        messages: list[dict[str, str]],
         max_tokens: int = 512,
         temperature: float = 0.2,
     ) -> str:
@@ -115,7 +115,7 @@ class ModelGateway:
 
             return self.runtime.generate_text(
                 model_id=model_id,
-                prompt=prompt,
+                messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
             )
@@ -128,7 +128,7 @@ class ModelGateway:
         self,
         *,
         image_path: str,
-        prompt: str,
+        messages: list[dict[str, str]],
         max_tokens: int = 384,
         temperature: float = 0.2,
     ) -> str:
@@ -146,7 +146,7 @@ class ModelGateway:
             return self.runtime.generate_vision(
                 model_id=model_id,
                 image_path=image_path,
-                prompt=prompt,
+                messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
             )

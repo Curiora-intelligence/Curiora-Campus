@@ -26,7 +26,7 @@ class RuntimeAdapter(ABC):
         self,
         *,
         model_id: str,
-        prompt: str,
+        messages: list[dict[str, str]],
         max_tokens: int,
         temperature: float,
     ) -> str:
@@ -38,7 +38,7 @@ class RuntimeAdapter(ABC):
         *,
         model_id: str,
         image_path: str,
-        prompt: str,
+        messages: list[dict[str, str]],
         max_tokens: int,
         temperature: float,
     ) -> str:

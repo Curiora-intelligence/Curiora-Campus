@@ -121,7 +121,7 @@ class TorchRuntime(RuntimeAdapter):
         self,
         *,
         model_id: str,
-        prompt: str,
+        messages: list[dict[str, str]],
         max_tokens: int,
         temperature: float,
     ) -> str:
@@ -130,8 +130,14 @@ class TorchRuntime(RuntimeAdapter):
 
         import torch
 
+        formatted_prompt = self._tokenizer.apply_chat_template(
+            messages,
+            add_generation_prompt=True,
+            tokenize=False,
+        )
+
         inputs = self._tokenizer(
-            prompt,
+            formatted_prompt,
             return_tensors="pt",
         )
 
@@ -244,7 +250,7 @@ class TorchRuntime(RuntimeAdapter):
         *,
         model_id: str,
         image_path: str,
-        prompt: str,
+        messages: list[dict[str, str]],
         max_tokens: int,
         temperature: float,
     ) -> str:
@@ -258,34 +264,37 @@ class TorchRuntime(RuntimeAdapter):
 
         self._ensure_vision_model(model_id)
 
-        messages = [
-            {
-                "role": "system",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": prompt,
-                    }
-                ],
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "image": str(image),
-                    },
-                    {
-                        "type": "text",
-                        "text": "Analyze this image.",
-                    },
-                ],
-            },
-        ]
+        formatted_messages = []
+        for i, msg in enumerate(messages):
+            # For Qwen3-VL, text needs to be structured in content array
+            if i == len(messages) - 1 and msg["role"] == "user":
+                formatted_messages.append({
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image",
+                            "image": str(image),
+                        },
+                        {
+                            "type": "text",
+                            "text": msg["content"],
+                        },
+                    ]
+                })
+            else:
+                formatted_messages.append({
+                    "role": msg["role"],
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": msg["content"],
+                        }
+                    ]
+                })
 
         inputs = (
             self._processor.apply_chat_template(
-                messages,
+                formatted_messages,
                 add_generation_prompt=True,
                 tokenize=True,
                 return_dict=True,

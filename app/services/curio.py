@@ -69,39 +69,14 @@ class CurioService:
             self.gateway
         )
 
-    def _build_text_prompt(
+    def _build_messages(
         self,
         history: list[dict[str, str]],
-    ) -> str:
-        prompt = f"{CURIO_SYSTEM_PROMPT}\n\n"
+    ) -> list[dict[str, str]]:
+        messages = [{"role": "system", "content": CURIO_SYSTEM_PROMPT}]
         for msg in history:
-            role = msg["role"].upper()
-            content = msg["content"]
-            if role == "USER":
-                prompt += f"USER:\n{content}\n\n"
-            else:
-                prompt += f"CURIO:\n{content}\n\n"
-        prompt += "CURIO:\n"
-        return prompt
-
-    def _build_vision_prompt(
-        self,
-        history: list[dict[str, str]],
-    ) -> str:
-        prompt = f"{CURIO_SYSTEM_PROMPT}\n\n"
-        for msg in history:
-            role = msg["role"].upper()
-            content = msg["content"]
-            if role == "USER":
-                if msg == history[-1]:
-                    # current message
-                    prompt += f"USER REQUEST:\n{content}\n\n"
-                else:
-                    prompt += f"USER:\n{content}\n\n"
-            else:
-                prompt += f"CURIO:\n{content}\n\n"
-        prompt += "CURIO:\n"
-        return prompt
+            messages.append({"role": msg["role"], "content": msg["content"]})
+        return messages
 
     def respond(self, message: str = "", image_path: str | None = None, conversation_id: str | None = None) -> tuple[str, str]:
         message = message.strip()
@@ -130,17 +105,17 @@ class CurioService:
             if not image.is_file():
                 raise FileNotFoundError(f"Image file not found: {image}")
 
-            prompt = self._build_vision_prompt(CONVERSATIONS[conversation_id])
+            messages = self._build_messages(CONVERSATIONS[conversation_id])
             answer = self.gateway.generate_vision(
                 image_path=str(image),
-                prompt=prompt,
+                messages=messages,
                 max_tokens=MAX_VISION_TOKENS,
                 temperature=TEMPERATURE,
             )
         else:
-            prompt = self._build_text_prompt(CONVERSATIONS[conversation_id])
+            messages = self._build_messages(CONVERSATIONS[conversation_id])
             answer = self.gateway.generate_text(
-                prompt=prompt,
+                messages=messages,
                 max_tokens=MAX_TEXT_TOKENS,
                 temperature=TEMPERATURE,
             )

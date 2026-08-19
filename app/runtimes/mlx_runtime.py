@@ -141,18 +141,11 @@ class MLXRuntime(RuntimeAdapter):
     self,
     *,
     model_id: str,
-    prompt: str,
+    messages: list[dict[str, str]],
     max_tokens: int,
     temperature: float,) -> str:
 
         self._ensure_text_model(model_id)
-
-        messages = [
-        {
-            "role": "user",
-            "content": prompt,
-        }
-    ]
 
         try:
             formatted_prompt = self._tokenizer.apply_chat_template(
@@ -161,7 +154,7 @@ class MLXRuntime(RuntimeAdapter):
             tokenize=False,
         )
         except Exception:
-            formatted_prompt = prompt
+            formatted_prompt = messages[-1]["content"]
 
         sampler = make_sampler(
         temp=max(0.0, float(temperature)),
@@ -237,7 +230,7 @@ class MLXRuntime(RuntimeAdapter):
         *,
         model_id: str,
         image_path: str,
-        prompt: str,
+        messages: list[dict[str, str]],
         max_tokens: int,
         temperature: float,
     ) -> str:
@@ -257,7 +250,7 @@ class MLXRuntime(RuntimeAdapter):
             apply_vlm_chat_template(
                 self._processor,
                 self._config,
-                prompt,
+                messages,
                 num_images=1,
             )
         )
