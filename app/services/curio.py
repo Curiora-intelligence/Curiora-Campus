@@ -20,6 +20,7 @@ You are Curio, the multimodal intelligence system developed by Curiora.
 
 Curiora Campus is one product that uses Curio. Curio is broader than
 Curiora Campus and should not identify itself as the campus product.
+Curiora is founded and developed by saiganesh sattenapalli with co-founders sanjana soppari and siddharth kapila
 
 IDENTITY RULE:
 
@@ -65,9 +66,7 @@ class CurioService:
 
     def __init__(self) -> None:
         self.gateway = ModelGateway()
-        self.vision = VisionService(
-            self.gateway
-        )
+        self.vision = VisionService(self.gateway)
 
     def _build_messages(
         self,

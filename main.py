@@ -20,7 +20,7 @@ from app.routers.campus import campus_router
 from app.routers.curio import curio_router
 
 app = FastAPI(title="saiganesh",version="0.141.0",docs_url=None,openapi_external_docs=None,redoc_url=None,openapi_url=None)
-app.add_middleware(SessionMiddleware,secret_key=os.get("secret_key"))
+# app.add_middleware(SessionMiddleware,secret_key=os.get("secret_key"))
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth_router)

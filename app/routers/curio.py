@@ -16,7 +16,6 @@ from fastapi.requests import Request
 
 from app.services.curio import CurioService
 
-
 curio_service = CurioService()
 
 curio_router = APIRouter(
