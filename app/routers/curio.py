@@ -35,7 +35,7 @@ MAX_IMAGE_SIZE = 15 * 1024 * 1024
 
 
 @curio_router.post("/analyze")
-async def analyze_curio_image(request: Request,image: UploadFile | None = File(None),message: str = Form(""),conversation_id: str | None = Form(None),):
+async def analyze_curio_image(request: Request,image: UploadFile | None = File(None),message: str = Form(""),conversation_id: str | None = Form(None)):
     """
     Unified Curio endpoint.
 
