@@ -7,8 +7,8 @@ from app.services.model_gateway import ModelGateway
 from app.services.vision import VisionService
 
 
-MAX_TEXT_TOKENS = 8192
-MAX_VISION_TOKENS = 4096
+MAX_TEXT_TOKENS = 20000
+MAX_VISION_TOKENS = 20000
 
 TEMPERATURE = 0.2
 

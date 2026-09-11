@@ -18,10 +18,7 @@ from app.services.curio import CurioService
 
 curio_service = CurioService()
 
-curio_router = APIRouter(
-    prefix="/curio",
-    tags=["Curio routings"],
-)
+curio_router = APIRouter(prefix="/curio",tags=["Curio routings"])
 
 
 ALLOWED_IMAGE_FORMATS = {
@@ -193,8 +190,6 @@ async def analyze_curio_image(request: Request,image: UploadFile | None = File(N
         if temporary_path is not None:
 
             try:
-                os.remove(
-                    temporary_path
-                )
+                os.remove(temporary_path)
             except OSError:
                 pass
