@@ -15,9 +15,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-from app.routers.authentication import auth_router
-from app.routers.campus import campus_router
-from app.routers.curio import curio_router
+from app.routers.authentication_router import auth_router
+from app.routers.campus_router import campus_router
+from app.routers.curio_router import curio_router
 
 app = FastAPI(title="saiganesh",version="0.141.0",docs_url=None,openapi_external_docs=None,redoc_url=None,openapi_url=None)
 # app.add_middleware(SessionMiddleware,secret_key=os.get("secret_key"))

@@ -128,44 +128,24 @@ class MLXRuntime(RuntimeAdapter):
     # TEXT / GPT-OSS
     # =========================================================
 
-    def _ensure_text_model(
-        self,
-        model_id: str,
-    ) -> None:
+    def _ensure_text_model(self,model_id: str) -> None:
 
-        if (
-            self._model is not None
-            and self._tokenizer is not None
-            and self._model_id == model_id
-            and self._mode == "text"
-        ):
+        if (self._model is not None and self._tokenizer is not None and self._model_id == model_id and self._mode == "text"):
             return
 
         self._clear_model()
 
-        print(
-            f"Loading Curio LLM through MLX: {model_id}"
-        )
+        print(f"Loading Curio LLM through MLX: {model_id}")
 
-        self._model, self._tokenizer = load_llm(
-            model_id
-        )
+        self._model, self._tokenizer = load_llm(model_id)
 
         self._model_id = model_id
         self._mode = "text"
 
-        print(
-            "Curio LLM loaded through MLX."
-        )
+        print("Curio LLM loaded through MLX.")
         self._debug_memory("after load")
 
-    def generate_text(
-    self,
-    *,
-    model_id: str,
-    messages: list[dict[str, str]],
-    max_tokens: int,
-    temperature: float,) -> str:
+    def generate_text(self,*,model_id: str,messages: list[dict[str, str]],max_tokens: int,temperature: float) -> str:
 
         self._ensure_text_model(model_id)
 
@@ -208,11 +188,7 @@ class MLXRuntime(RuntimeAdapter):
         verbose=False,
         )
 
-        answer = (
-        result
-        if isinstance(result, str)
-        else str(result)
-        ).strip()
+        answer = (result if isinstance(result, str) else str(result)).strip()
 
         answer = self._extract_final_response(answer)
 

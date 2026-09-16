@@ -69,19 +69,9 @@ async def analyze_curio_image(request: Request,image: UploadFile | None = File(N
     if image is None:
 
         try:
-            answer, new_conversation_id = await run_in_threadpool(
-                curio_service.respond,
-                message,
-                None,
-                conversation_id,
-            )
+            answer, new_conversation_id = await run_in_threadpool(curio_service.respond,message,None,conversation_id)
 
-            return {
-                "success": True,
-                "mode": "text",
-                "answer": answer,
-                "conversation_id": new_conversation_id,
-            }
+            return {"success": True,"mode": "text","answer": answer,"conversation_id": new_conversation_id}
 
         except Exception as exc:
             print(

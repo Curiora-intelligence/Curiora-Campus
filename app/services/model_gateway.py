@@ -105,10 +105,7 @@ class ModelGateway:
 
         with self._lock:
 
-            if (
-                self.runtime_info.kind
-                == RuntimeKind.MLX
-            ):
+            if (self.runtime_info.kind== RuntimeKind.MLX):
                 model_id = self.TEXT_MODEL_ID
             else:
                 model_id = self.TORCH_TEXT_MODEL_ID
