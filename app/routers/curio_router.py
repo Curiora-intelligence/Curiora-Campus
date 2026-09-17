@@ -31,8 +31,8 @@ ALLOWED_IMAGE_FORMATS = {
 MAX_IMAGE_SIZE = 15 * 1024 * 1024
 
 
-@curio_router.post("/analyze")
-async def analyze_curio_image(request: Request,image: UploadFile | None = File(None),message: str = Form(""),conversation_id: str | None = Form(None)):
+@curio_router.post("/")
+async def curio(request: Request,image: UploadFile | None = File(None),message: str = Form(""),conversation_id: str | None = Form(None)):
     """
     Unified Curio endpoint.
 
@@ -57,10 +57,7 @@ async def analyze_curio_image(request: Request,image: UploadFile | None = File(N
     # ---------------------------------------------------------
 
     if image is None and not message:
-        raise HTTPException(
-            status_code=400,
-            detail="Please provide a message or an image.",
-        )
+        raise HTTPException(status_code=400,detail="Please provide a message or an image.")
 
     # ---------------------------------------------------------
     # TEXT-ONLY REQUEST
@@ -157,23 +154,13 @@ async def analyze_curio_image(request: Request,image: UploadFile | None = File(N
 
     except FileNotFoundError as exc:
 
-        raise HTTPException(
-            status_code=400,
-            detail="The uploaded image could not be processed.",
-        ) from exc
+        raise HTTPException(status_code=400,detail="The uploaded image could not be processed.") from exc
 
     except Exception as exc:
 
-        print(
-            f"Curio image request failed: {exc}"
-        )
+        print(f"Curio image request failed: {exc}")
 
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                "Curio could not analyze the image."
-            ),
-        ) from exc
+        raise HTTPException(status_code=500,detail=("Curio could not analyze the image.")) from exc
 
     finally:
 

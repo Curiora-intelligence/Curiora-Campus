@@ -4,7 +4,11 @@
 
 {% block content %}
 <section class="faculty-page">
-    <header class="faculty-heading"><p class="eyebrow">FACULTY PORTAL</p><h1>A clearer view of campus.</h1><p>Review incoming reports, resolve them, and listen to student feedback.</p></header>
+    <header class="faculty-heading">
+        <p class="eyebrow">FACULTY PORTAL</p>
+        <h1>A clearer view of campus.</h1>
+        <p>Review incoming reports, resolve them, and listen to student feedback.</p>
+    </header>
 
     <div class="faculty-stats">
         <article><span>Active reports</span><strong>{{ total }}</strong></article>
@@ -13,17 +17,47 @@
     </div>
 
     <div class="faculty-grid">
-        <section class="faculty-panel"><div class="panel-heading"><h2>Report signals</h2><p>Volume by category</p></div>
-            {% if category_stats %}<div class="signal-list">{% for stat in category_stats %}<div class="signal-row"><div><span>{{ stat.category }}</span><strong>{{ stat.count }}</strong></div><i><b style="width: {{ stat.width }}%"></b></i></div>{% endfor %}</div>{% else %}<p class="empty-state">No reports have been submitted yet.</p>{% endif %}
+        <section class="faculty-panel">
+            <div class="panel-heading">
+                <h2>Report signals</h2>
+                <p>Volume by category</p>
+            </div>
+            {% if category_stats %}<div class="signal-list">{% for stat in category_stats %}<div class="signal-row">
+                    <div><span>{{ stat.category }}</span><strong>{{ stat.count }}</strong></div><i><b
+                            style="width: {{ stat.width }}"></b></i>
+                </div>{% endfor %}</div>{% else %}<p class="empty-state">No reports have been submitted yet.</p>{% endif
+            %}
         </section>
 
-        <section class="faculty-panel faculty-panel-wide"><div class="panel-heading"><h2>Active reports</h2><p>Resolve a report once the next action is complete.</p></div>
-            {% if complaints %}<div class="report-list">{% for complaint in complaints %}<article class="report-item"><div><span class="report-category">{{ complaint.category }}</span><h3>{{ complaint.description }}</h3><p>Typical first response: {{ complaint.days }} day{% if complaint.days != '1' %}s{% endif %}</p></div><div class="report-action"><span class="status status-{{ complaint.status|lower }}">{{ complaint.status }}</span>{% if complaint.status|lower != 'solved' %}<form action="/solve-complaint/{{ complaint.index }}" method="post"><button class="text-button" type="submit">Mark resolved</button></form>{% endif %}</div></article>{% endfor %}</div>{% else %}<p class="empty-state">No active reports right now.</p>{% endif %}
+        <section class="faculty-panel faculty-panel-wide">
+            <div class="panel-heading">
+                <h2>Active reports</h2>
+                <p>Resolve a report once the next action is complete.</p>
+            </div>
+            {% if complaints %}<div class="report-list">{% for complaint in complaints %}<article class="report-item">
+                    <div><span class="report-category">{{ complaint.category }}</span>
+                        <h3>{{ complaint.description }}</h3>
+                        <p>Typical first response: {{ complaint.days }} day{% if complaint.days != '1' %}s{% endif %}
+                        </p>
+                    </div>
+                    <div class="report-action"><span class="status status-{{ complaint.status|lower }}">{{
+                            complaint.status }}</span>{% if complaint.status|lower != 'solved' %}<form
+                            action="/solve-complaint/{{ complaint.index }}" method="post"><button class="text-button"
+                                type="submit">Mark resolved</button></form>{% endif %}</div>
+                </article>{% endfor %}</div>{% else %}<p class="empty-state">No active reports right now.</p>{% endif %}
         </section>
     </div>
 
-    <section class="faculty-panel feedback-panel"><div class="panel-heading"><h2>Student feedback</h2><p>Recent messages from the campus community.</p></div>
-        {% if feedbacks %}<div class="feedback-list">{% for feedback in feedbacks %}<article><div><strong>{{ feedback.name }}</strong><span>{{ feedback.rating }}/5</span></div><p>{{ feedback.comment }}</p></article>{% endfor %}</div>{% else %}<p class="empty-state">Feedback will appear here when students submit it.</p>{% endif %}
+    <section class="faculty-panel feedback-panel">
+        <div class="panel-heading">
+            <h2>Student feedback</h2>
+            <p>Recent messages from the campus community.</p>
+        </div>
+        {% if feedbacks %}<div class="feedback-list">{% for feedback in feedbacks %}<article>
+                <div><strong>{{ feedback.name }}</strong><span>{{ feedback.rating }}/5</span></div>
+                <p>{{ feedback.comment }}</p>
+            </article>{% endfor %}</div>{% else %}<p class="empty-state">Feedback will appear here when students submit
+            it.</p>{% endif %}
     </section>
 </section>
 {% endblock %}

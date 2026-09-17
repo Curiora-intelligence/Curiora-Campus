@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 formData.append("conversation_id", currentConversationId);
             }
 
-            const response = await fetch("/curio/analyze", {
+            const response = await fetch("/curio/", {
                 method: "POST",
                 body: formData
             });
